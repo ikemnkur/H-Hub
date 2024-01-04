@@ -1,7 +1,12 @@
 // import React from "react";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db, storage } from "../firebase";
+import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc, setDoc} from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+// import { doc, setDoc } from "firebase/firestore";
+import { useNavigate, Link } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
@@ -9,57 +14,68 @@ import Navbar from "../components/Navbar";
 
 import { AuthContext } from "../context/AuthContext";
 
-const Home = () => {
-  const { currentUser } = useContext(AuthContext);
+const AccountSettings = () => {
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [profilePic, setProfilePic] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleEmailChange = (e) => {
+      setEmail(e.target.value);
+  };
+
+  const handleUsernameChange = (e) => {
+      setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+  };
+
+  const handleProfilePicChange = (e) => {
+      setProfilePic(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      const currentUser = auth.currentUser;
+
+      if (profilePic) {
+          const storageRef = storage.ref();
+          const profilePicRef = storageRef.child(`${username + serverTimestamp()}.${profilePic.name.split('.').pop()}`);
+          setUploading(true);
+
+          try {
+              await profilePicRef.put(profilePic);
+              const photoURL = await profilePicRef.getDownloadURL();
+              await currentUser.updateProfile({ photoURL });
+              setUploading(false);
+          } catch (error) {
+              console.error("Error uploading file: ", error);
+              setUploading(false);
+          }
+      }
+
+      if (email !== '') {
+          await currentUser.updateEmail(email);
+      }
+      if (password !== '') {
+          await currentUser.updatePassword(password);
+      }
+  };
+
   return (
-    <>
-      <div
-        style={{
-          alignItems: "center",
-          // margin: 5,
-          padding: 3,
-          height: 48,
-          display: "flex",
-          background: "#2f2d52"
-        }}
-      >
-        <div>
-          <span style={{ fontSize: 24, margin: 5, padding: 3, color: "white" }}>H-Hub</span>
-        </div>
-        
-        {/* <div className="sidebar"> */}
-          {/* <div className="navbar"> */}
-            <div id="topNavBar" style={{float: "right", display: "flex", marginLeft: "auto"}}>
-              <img
-                id="topNavBarPic"
-                src={currentUser.photoURL}
-                alt=""
-                style={{
-                  backgroundColor: "#ddddf7",
-                  height: 40,
-                  width: 40,
-                  borderRadius: 50,
-                  borderColor: "gray",
-                  border: "3px solid gray",
-                  objectFit: "cover",
-                  marginRight: "5px",
-                }}
-              />
-              <span style={{margin: "auto"}}>{currentUser.displayName}</span>
-              <button style={{margin: 5}} onClick={() => signOut(auth)}>logout</button>
-            </div>
-          {/* </div> */}
-          {/* <Navbar /> */}
-        {/* </div> */}
+      <div>
+          <form onSubmit={handleSubmit}>
+              <input type="email" value={email} onChange={handleEmailChange} placeholder="Change Email" />
+              <input type="text" value={username} onChange={handleUsernameChange} placeholder="Change Username" />
+              <input type="password" value={password} onChange={handlePasswordChange} placeholder="Change Password" />
+              <input type="file" onChange={handleProfilePicChange} />
+              <button type="submit" disabled={uploading}>Update Settings</button>
+          </form>
       </div>
-      <div className="home">
-        <div className="container">
-          <Sidebar />
-          <Chat />
-        </div>
-      </div>
-    </>
   );
 };
 
-export default Home;
+export default AccountSettings;
