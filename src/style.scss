@@ -90,7 +90,7 @@
 
 .home {
   background-color: #a7bcff;
-  height: 100vh;
+  // height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +99,8 @@
     border: 1px solid white;
     border-radius: 10px;
     width: 90%;
-    height: 85%;
+    margin-bottom: 10px;
+    // height: 85%;
     // display: flex;
     overflow: hidden;
     @include tablet {
@@ -230,7 +231,7 @@
         background-color: #ddddf7;
         padding: 10px;
         height: calc(100% - 160px);
-        overflow: scroll;
+        overflow-y: scroll;
 
         .message {
           display: flex;

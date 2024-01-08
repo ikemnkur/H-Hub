@@ -1,0 +1,47 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "postId": "12d3asc32",
+      "modelName": "pamm",
+      "modelProfileImg": "http://",
+      "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Bichon_Fris%C3%A9_-_studdogbichon.jpg/640px-Bichon_Fris%C3%A9_-_studdogbichon.jpg",
+      "caption": "ABC text",
+      "likes": "Maxwell, T-Rell, Jay",
+      "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
+      "tips": "Maxwell:2;"
+    },
+    {
+      "id": 2,
+      "postId": "12d3asc32",
+      "modelName": "pammme",
+      "modelProfileImg": "http://",
+      "mediaUrl": "https://www.elmueble.com/medio/2023/03/09/perro-de-raza-rottweiler_9f7a22a7_230309180127_900x900.jpg",
+      "caption": "ABC text",
+      "likes": "Maxwell, T-Rell, Jay",
+      "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
+      "tips": "Maxwell:2;"
+    },
+    {
+      "id": 3,
+      "postId": "12d3asc32",
+      "modelName": "jess",
+      "modelProfileImg": "http://",
+      "mediaUrl": "https://images.unsplash.com/photo-1593270379182-fe1b1f6d67e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDV8fGJvcmRlciUyMGNvbGxpZXxlbnwwfHx8fDE2MzEzMDE0MDA&ixlib=rb-1.2.1&q=80&w=1000",
+      "caption": "ABCD text",
+      "likes": "Maxwell, T-Rell, Jay",
+      "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
+      "tips": "Maxwell:2;"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

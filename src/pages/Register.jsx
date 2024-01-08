@@ -5,6 +5,7 @@ import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
+import ImageCanvas from "../components/ImageUploadPreview";
 
 const Register = () => {
   const [err, setErr] = useState(false);
@@ -67,12 +68,14 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           <input required type="text" placeholder="display name" />
           <input required type="email" placeholder="email" />
+          <input required type="password" placeholder="password" /> 
           <input required type="password" placeholder="password" />
           <input style={{ display: "none" }} type="file" id="file" />
           <label htmlFor="file">
             <img src={AddPic} alt="" />
             <span>Add an avatar / Profile Picture</span>
           </label>
+          <ImageCanvas/>
           <button disabled={loading}>Sign up</button>
           {loading && "Uploading and compressing the image please wait..."}
           {err && <span>Something went wrong</span>}
