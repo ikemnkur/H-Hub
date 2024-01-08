@@ -83,6 +83,7 @@ const Post = () => {
   const commentsRef = useRef(null);
   const captionRef = useRef(null);
   const modelNameRef = useRef(null);
+  const profilePicRef = useRef(null);
   const imageCanvasRef = useRef(null);
 
 
@@ -90,7 +91,8 @@ const Post = () => {
   const [postID, setPostID] = useState(null); 
   const [likes, setLikes] = useState(null);
   const [comments, setComments] = useState(null);
-  const [modelName, setModelName] = useState(null);
+  const [modelName, setModelName] = useState(null); 
+  const [modelProfilePic, setModelProfilePic] = useState(null);
   const [caption, setCaption] = useState(null);
   const [scale, setScale] = useState(0.5);
 
@@ -101,7 +103,9 @@ const Post = () => {
       setPostID(postData.postId);
     //   console.log("post ID: " + postID);
       modelNameRef.current.innerHTML = postData.modelName;
-      setModelName(postData.modelName);
+      setModelName(postData.modelName); 
+      profilePicRef.current.src = postData.modelProfileImg;
+      setModelProfilePic(postData.modelProfileImg);
       commentsRef.current.innerHTML = postData.comments.split(";").length;
       setComments(postData.comments.split(";").length)
       likesRef.current.innerHTML = postData.likes.split(",").length;
@@ -131,6 +135,7 @@ const Post = () => {
           <div style={{ display: "flex" }}>
             <div style={{ display: "flex", margin: "3px 0px" }}>
               <img
+                ref={profilePicRef}
                 src=""
                 alt=""
                 style={{ border: "3px", width: 48, height: 48, margin: 3 }}
@@ -147,7 +152,7 @@ const Post = () => {
                 <FaCommentDollar /> Chat
               </button>
               <button style={{ margin: 3 }}> $ Subscribe</button>
-              <button style={{ margin: 3 }}> X Hide</button>
+              <button style={{ margin: 3, padding: "3px 7px", backgroundColor: "#FF4444", border: "none", borderRadius: 5 }}> X </button>
             </div>
           </div>
           <div style={{ margin: "auto", padding: 3, display: "flex" }}>
