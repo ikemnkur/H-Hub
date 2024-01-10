@@ -4,9 +4,11 @@ import React from "react";
 import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 
-const Modal = ({ setIsOpen }) => {
+const Modal = ({ setIsOpen, tips, modelName }) => {
 
-  let modelName = "Example Model";
+  // let modelName = "Example Model";
+  // modelName = modelname;
+  let tipsAmount = parseInt(tips.split(':')[0].replace(';', ''));
 
   function onlyNumberKey(evt) {
  
@@ -22,24 +24,23 @@ const Modal = ({ setIsOpen }) => {
     <>
       <div className={styles.darkBG} onClick={() => setIsOpen(false)} />
       <div className={styles.centered}>
-        <div className={styles.modal}>
+        <div className={styles.tipModal}>
           <div className={styles.modalHeader}>
-            <h5 className={styles.heading}>Dialog</h5>
+            <h5 className={styles.heading}>Unlock Post</h5>
           </div>
           <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
             <RiCloseLine style={{ marginBottom: "-3px" }} />
           </button>
           <div className={styles.modalContent}>
-            Leave a comment on {modelName}'s post:
+            Are you sure you want to unlock: <b>{modelName}'s</b> post ?
           </div>
           <div className={styles.modalContent}>
-            <b>Type Comment: </b>
-            <input type="text" maxlength="512" size="50%" />
+            <b>Unlock Amount: </b><span>5</span>
           </div>
           <div className={styles.modalActions}>
             <div className={styles.actionsContainer}>
               <button className={styles.deleteBtn} onClick={() => setIsOpen(false)}>
-                Add Comment
+                Unlock
               </button>
               <button
                 className={styles.cancelBtn}

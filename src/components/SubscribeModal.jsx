@@ -4,11 +4,11 @@ import React from "react";
 import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 
-const Modal = ({ setIsOpen, tips, modelName }) => {
+const Modal = ({ setIsOpen, modelName }) => {
 
   // let modelName = "Example Model";
   // modelName = modelname;
-  let tipsAmount = parseInt(tips.split(':')[0].replace(';', ''));
+  // let tipsAmount = parseInt(tips.split(':')[0].replace(';', ''));
 
   function onlyNumberKey(evt) {
  
@@ -24,24 +24,26 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
     <>
       <div className={styles.darkBG} onClick={() => setIsOpen(false)} />
       <div className={styles.centered}>
-        <div className={styles.tipModal}>
+        <div className={styles.subscribeModal}>
           <div className={styles.modalHeader}>
-            <h5 className={styles.heading}>Dialog</h5>
+            <h5 className={styles.heading}>Subscribe</h5>
           </div>
           <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
             <RiCloseLine style={{ marginBottom: "-3px" }} />
           </button>
           <div className={styles.modalContent}>
-            Are you sure you want to tip: <b>{modelName}</b> ?
+            Do you want to subscribe to: <b>{modelName}</b>?<br />
+            <span> For 30 days, you can subscribe to {modelName}'s exculsive posts. </span>
           </div>
           <div className={styles.modalContent}>
-            <b>Tip Amount: </b>
-            <input type="text" onkeypress={(e)=>{return onlyNumberKey(e)}} maxlength="2" size="50%" />
+            <b>Subscribe Amount: </b> <span>50</span>
+            <br />
+            
           </div>
           <div className={styles.modalActions}>
             <div className={styles.actionsContainer}>
               <button className={styles.deleteBtn} onClick={() => setIsOpen(false)}>
-                Send Tip
+                Subscribe
               </button>
               <button
                 className={styles.cancelBtn}

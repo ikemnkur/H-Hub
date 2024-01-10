@@ -18,8 +18,8 @@
   }
   
   .modal {
-    width: 250px;
-    height: 170px;
+    width: 450px;
+    height: 450px;
     background: white;
     color: white;
     z-index: 10;
@@ -27,6 +27,26 @@
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
   }
   
+  .tipModal {
+    width: 400px;
+    height: 200px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
+
+  .subscribeModal {
+    width: 450px;
+    height: 200px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
+
   .modalHeader {
     height: 50px;
     background: white;
@@ -73,7 +93,7 @@
     font-size: 18px;
     color: #2c3e50;
     background: rgb(238, 16, 16);
-    transition: all 0.25s ease;
+    /* transition: all 0.25s ease; */
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.06);
     position: absolute;
     right: 0;
@@ -85,7 +105,7 @@
   
   .closeBtn:hover {
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
-    transform: translate(-4px, 4px);
+    /* transform: translate(-4px, 4px); */
   }
   
   .deleteBtn {
@@ -93,6 +113,19 @@
     cursor: pointer;
     font-weight: 500;
     padding: 11px 28px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    border: none;
+    color: #fff;
+    background: #ff3e4e;
+    transition: all 0.25s ease;
+  }
+
+  .addComment {
+    margin-top: auto;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 5px 10px;
     border-radius: 12px;
     font-size: 0.8rem;
     border: none;
@@ -116,12 +149,12 @@
     font-size: 0.8rem;
     border: none;
     color: #2c3e50;
-    background: #fcfcfc;
+    background: #c5c1ffb9;
     transition: all 0.25s ease;
   }
   
   .cancelBtn:hover {
     box-shadow: none;
     transform: none;
-    background: whitesmoke;
+    background: rgba(160, 175, 255, 0.39);
   }
