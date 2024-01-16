@@ -4,11 +4,13 @@ import React from "react";
 import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 
-const Modal = ({ setIsOpen, tips, modelName }) => {
+import Post from "../components/Post";
 
-  // let modelName = "Example Model";
+const Modal = ({ setIsOpen, postData }) => {
+
+  let modelName = "Example Model";
   // modelName = modelname;
-  console.log("Tips: ", tips)
+  // console.log("Tips: ", tips);
 
   let index = 0;
 
@@ -34,7 +36,7 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
 
   
 
-  let allTips = sortStringByNumbers(tips);
+  // let allTips = sortStringByNumbers(tips);
 
   // let tipsAmount = parseInt(tips.split(':')[0].replace(';', ''));
 
@@ -52,7 +54,7 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
     <>
       <div className={styles.darkBG} onClick={() => setIsOpen(false)} />
       <div className={styles.centered}>
-        <div className={styles.tipModal}>
+        <div className={styles.postModal}>
           <div className={styles.modalHeader}>
             <h5 className={styles.heading}>Tips</h5>
           </div>
@@ -60,38 +62,8 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
             <RiCloseLine style={{ marginBottom: "-3px" }} />
           </button>
 
-          <div style={{ border: "2px solid black", borderRadius: 5, width: "90%", height: 100, margin: "auto", overflowY: "scroll", backgroundColor: "lightgray" }}>
-            {
-            
-            allTips.map((KV) => {
-              index++;
-              return (
-                <div style={{ display: "flex", padding: 2, margin: 3, color: "black", backgroundColor: "white", borderRadius: 5 }}>
-                  <b style={{ marginLeft: "0" }}>#{index}. </b> <b style={{ margin: "auto" }}> {KV.key} <span> tipped </span> <b style={{ color: "gold", backgroundColor: "black", padding:"0px 7px", margin: "2px", borderRadius: 5 }}>{KV.value}</b><span> coins!!! </span></b>
-                </div>
-              )
-            })}
-          </div>
-          <div className={styles.modalContent}>
-            Want to tip: <b>{modelName}</b> ?
-          </div>
-          <div className={styles.modalContent}>
-            <b>Tip Amount: </b>
-            <input type="text" onKeyDown={(e) => { return onlyNumberKey(e) }} maxLength="2" size="50%" />
-          </div>
-          <div className={styles.modalActions}>
-            <div className={styles.actionsContainer}>
-              <button className={styles.deleteBtn} onClick={() => setIsOpen(false)}>
-                Send Tip
-              </button>
-              <button
-                className={styles.cancelBtn}
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <Post data={postData} showButtons={false}/>
+
         </div>
       </div>
     </>

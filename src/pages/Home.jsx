@@ -1,7 +1,10 @@
 // import React from "react";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
+
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import axios from "axios";
 
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
@@ -15,55 +18,95 @@ import { FcLike } from "react-icons/fc";
 import { FaComment } from "react-icons/fa";
 import { IoIosUnlock } from "react-icons/io";
 import { GiPayMoney } from "react-icons/gi";
+import { FaSearch } from "react-icons/fa";
 
 import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Home = () => {
-  const { currentUser } = useContext(AuthContext);
+  // const { currentUser } = useContext(AuthContext);
 
-  const createThread = (threadTitle) => {
-		fetch("http://localhost:3000/posts/1", {
-			method: "GET",
-			// body: JSON.stringify({
-			// 	thread,
-			// 	user_id: localStorage.getItem("_id"),
-			// 	title: threadTitle,
-			// 	media_link: ""
-			// }),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				// alert(data.message);
-				// const newThread = data.data;
-				// setThreadList((prev) => ([newThread, ...prev]));
-        console.log("Data: " + JSON.stringify(data))
-			})
-			.catch((err) => console.error(err));
-	};
+  // localStorage.setItem("username", currentUser.displayName)
 
-  function likeAction() {
+  // const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  const [allPosts, setAllPosts] = useState(null);
+  const [searchForMode, setSearchForMode] = useState("posts")
+  const searchFor = useRef(null)
+  const searchInput = useRef(null)
+  let sf = "posts";
+  
+  const [searchedModels, setSearchedModels] = useState(null)
 
+  const getAllPosts = async (threadTitle) => {
+    fetch("http://localhost:4000/posts", {
+      method: "GET",
+      // body: JSON.stringify({
+      // 	thread,
+      // 	user_id: localStorage.getItem("_id"),
+      // 	title: threadTitle,
+      // 	media_link: ""
+      // }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // alert(data.message);
+        // const newThread = data.data;
+        // setThreadList((prev) => ([newThread, ...prev]));
+        setAllPosts(data);
+        // console.log("AllPosts: ", JSON.stringify(data));
+      })
+      .catch((err) => console.error(err));
+  };
+
+  async function handleSearch4Models (){
+    const input = searchInput.current.value;
+    console.log("Search For: ", input)
+    const response = await axios.get(`http://localhost:4000/models`);
+    const chats = response.data;
+
+    console.log("List of Matching Models: ", chats)
+    setSearchedModels(chats)
   }
 
-  function commentAction() {
+  useEffect(() => {
+    getAllPosts();
+  }, [])
+  
 
+  function setTheSearchMode(){
+    let sf = searchFor.current.value
+    console.log("Search Mode:", sf)
+    setSearchForMode(sf)
   }
 
-  function tipAction() {
-
+  async function followModel(modelName){
+    let newCurrentUser = currentUser
+    newCurrentUser.following += ","+ modelName;
+    try {
+      const response = await axios.put(`http://localhost:4000/users/${currentUser.id}`, newCurrentUser);
+      console.log('Item updated:', response.data);
+      setCurrentUser(newCurrentUser)
+      localStorage.setItem("currentUser", JSON.stringify(newCurrentUser))
+    } catch (error) {
+      console.error('Error updating item:', error);
+    }
+    
   }
-
-  function unlockAction() {
-
-  }
+  
+  // const handleKey = (e) => {
+  //   e.code === "Enter" && handleSearch4Models(searchInput.current.value);
+  // };
 
   return (
     <>
       <TopNavBar />
-      <div style={{ padding: 10, backgroundColor: "#a7bcff" }}>
+      <div style={{ padding: 5, backgroundColor: "#a7bcff" }}>
         <div
           style={{
             height: 150,
@@ -78,9 +121,68 @@ const Home = () => {
         </div>
       </div>
 
-          {/* <Modal/> */}
+      <div style={{padding: "5px 15px", backgroundColor: "#a7bcff" }}>
+        
+        <div style={{display:"flex", gap: 5, padding: 10, margin: "2% 5%", backgroundColor: "#a7ccff", borderRadius: 10, border: "3px solid black" }}>
+          <FaSearch style={{fontSize: 32, marginRight: 5}}/>
+          
+          <input ref={searchInput} type="text" onKeyDown={(e) => { if (e.key === "Enter") handleSearch4Models(); }} onKeyUp={()=>{console.log("keyUP")}} style={{ width: "70%", height: 32, marginRight: 10}}/>
+          <span for="cars" style={{width:"10%", margin: "auto"}}>Look for:</span>
+          <select id="searchFor" name="cars" style={{width:"15%"}} ref={searchFor} onClick={()=>setTheSearchMode()}>
+            <option value="posts">Posts</option>
+            <option value="models">Models</option>
+            <option value="followings">Followings</option>
+            <option value="subcriptions">Subcriptions</option>
+          </select>
+        </div>
 
-      <Post/>
+        {searchForMode === "posts" &&
+          <div style={{ overflowY: "scroll", scrollbarWidth: "none", height: 600 }}>
+            {console.log("hello: " + JSON.stringify(allPosts))}
+            {!(allPosts === null) && allPosts.map((post) => {
+
+              return (
+                <Post data={post} showButtons={true} />
+              )
+
+            })}
+          </div>
+        }
+        {searchForMode === "models" &&
+          <div style={{ overflowY: "scroll", scrollbarWidth: "none", height: 600 }}>
+            <div style={{ height: 50, width: "90%", margin: "auto", padding: 20 }}>
+              Type 3 letters to start a search
+            </div>
+            {/* {console.log("hello: " + JSON.stringify(allPosts))} */}
+            {!(searchedModels === null) && searchedModels.map((model) => {
+
+              return (
+                <div>
+                  <div style={{ display: "flex", flexDirection: "row", gap: 10, margin: "auto", borderRadius: 10 }}>
+                    <div style={{ padding: 10, margin: 10, display: "flex", flexDirection: "column", gap: 10, backgroundColor: "#eeeeff", borderRadius: 10 }}>
+                      <img src={model.modelProfileImg} alt="" style={{ width: 160 }} />
+                      <b style={{ margin: "auto" }}>{model.name}</b>
+                      <div style={{ margin: "auto", gap: 5 }}>
+                        <button onClick={() => { followModel(model.name) }}>Follow</button>
+                        <button onClick={() => { navigate("/model?model=" + model.name) }}>Profile</button>
+                        <button onClick={() => { navigate("/chat?model=" + model.name) }}>Chat</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              )
+
+            })}
+          </div>
+        }
+
+      </div>
+
+      
+
+      
+
 
       {/* <div style={{ padding: 10, backgroundColor: "#a7bcff" }}>
         <div

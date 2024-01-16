@@ -1,11 +1,8 @@
 // import React from "react";
 import React, { useContext, useState, useEffect, useRef } from "react";
 
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import axios from "axios";
 
-// import Sidebar from "../components/Sidebar";
-// import Chat from "../components/Chat";
 import TopNavBar from "../components/TopNavBar";
 
 import Cam from "../img/cam.png";
@@ -21,228 +18,31 @@ import { ChatContext } from "../context/ChatContext";
 import { FaSearch } from "react-icons/fa";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  getDocs,
-  setDoc,
-  doc,
-  updateDoc,
-  serverTimestamp,
-  getDoc,
-} from "firebase/firestore";
-import { db } from "../firebase";
+
 
 const ChatPage = () => {
   const { data } = useContext(ChatContext);
-  const { currentUser } = useContext(AuthContext);
-  // const chatsList = useRef(null);
-
-  // const ChatsList = () => {
-  //   const [chats, setChats] = useState([]);
-
-  //   const { currentUser } = useContext(AuthContext);
-  //   const { dispatch } = useContext(ChatContext);
-
-  //   useEffect(() => {
-  //     const getChats = () => {
-  //       const unsub = onSnapshot(
-  //         doc(db, "userChats", currentUser.uid),
-  //         (doc) => {
-  //           setChats(doc.data());
-  //         }
-  //       );
-
-  //       return () => {
-  //         unsub();
-  //       };
-  //     };
-
-  //     currentUser.uid && getChats();
-  //   }, [currentUser.uid]);
-
-  //   const handleSelect = (u) => {
-  //     dispatch({ type: "CHANGE_USER", payload: u });
-  //   };
-
-  //   return (
-  //     <div className="chats">
-  //       {Object.entries(chats)
-  //         ?.sort((a, b) => b[1].date - a[1].date)
-  //         .map((chat) => (
-  //           <div
-  //             className="userChat"
-  //             key={chat[0]}
-  //             onClick={() => handleSelect(chat[1].userInfo)}
-  //           >
-  //             <img src={chat[1].userInfo.photoURL} alt="" />
-  //             <div className="userChatInfo">
-  //               <span>{chat[1].userInfo.displayName}</span>
-  //               <p>{chat[1].lastMessage?.text}</p>
-  //             </div>
-  //           </div>
-  //         ))}
-  //     </div>
-  //   );
-  // };
-
-  // const Navbar = (chatsList) => {
-  //   const { currentUser } = useContext(AuthContext);
-
-  //   const [coins, setCoins] = useState(0);
-  //   const [viewChat, setViewChat] = useState(false);
-  //   const chatSearch = useRef(null);
-  //   // const chatsList = useRef(null);
-
-  //   function openChats() {
-  //     setViewChat(!viewChat);
-  //     console.log("closeChats");
-  //     // chatSearch.current.display = viewChat ? "block" : "none";
-  //     // chatSearch.current.style.display = "none";
-  //     chatsList.current.style.display = "none";
-  //   }
-
-  //   return (
-  //     <div className="navbar" ref={chatSearch} id="navbar">
-  //       <div className="user" style={{ display: "flex" }}>
-  //         {/* <img src={currentUser.photoURL} alt="" /> */}
-  //         {/* <span>{currentUser.displayName}</span> */}
-  //         {/* <div> */}
-  //         <span>Coins: {coins}</span>
-  //         <button onClick={() => setCoins(1 + coins)}>+ Get More</button>
-  //         {/* <button onClick={() => setCoins(!viewChat)}> {">>>"} </button> */}
-  //         {/* </div> */}
-  //         {/* <span>Coins: {coins}</span> */}
-  //         <button
-  //           style={{ float: "right", marginLeft: "auto" }}
-  //           onClick={openChats}
-  //         >
-  //           {" "}
-  //           {">>>"}{" "}
-  //         </button>
-  //         {/* <button onClick={()=>signOut(auth)}>logout</button> */}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
-  // const Search = () => {
-  //   const [username, setUsername] = useState("");
-  //   const [user, setUser] = useState(null);
-  //   const [err, setErr] = useState(false);
-
-  //   const { currentUser } = useContext(AuthContext);
-
-  //   const handleSearch = async () => {
-  //     const q = query(
-  //       collection(db, "users"),
-  //       where("displayName", "==", username)
-  //     );
-
-  //     try {
-  //       const querySnapshot = await getDocs(q);
-  //       querySnapshot.forEach((doc) => {
-  //         setUser(doc.data());
-  //       });
-  //     } catch (err) {
-  //       setErr(true);
-  //     }
-  //   };
-
-  //   const handleKey = (e) => {
-  //     e.code === "Enter" && handleSearch();
-  //   };
-
-  //   const handleSelect = async () => {
-  //     //check whether the group(chats in firestore) exists, if not create
-  //     const combinedId =
-  //       currentUser.uid > user.uid
-  //         ? currentUser.uid + user.uid
-  //         : user.uid + currentUser.uid;
-  //     try {
-  //       const res = await getDoc(doc(db, "chats", combinedId));
-
-  //       if (!res.exists()) {
-  //         //create a chat in chats collection
-  //         await setDoc(doc(db, "chats", combinedId), { messages: [] });
-
-  //         //create user chats
-  //         await updateDoc(doc(db, "userChats", currentUser.uid), {
-  //           [combinedId + ".userInfo"]: {
-  //             uid: user.uid,
-  //             displayName: user.displayName,
-  //             photoURL: user.photoURL,
-  //           },
-  //           [combinedId + ".date"]: serverTimestamp(),
-  //         });
-
-  //         await updateDoc(doc(db, "userChats", user.uid), {
-  //           [combinedId + ".userInfo"]: {
-  //             uid: currentUser.uid,
-  //             displayName: currentUser.displayName,
-  //             photoURL: currentUser.photoURL,
-  //           },
-  //           [combinedId + ".date"]: serverTimestamp(),
-  //         });
-  //       }
-  //     } catch (err) {}
-
-  //     setUser(null);
-  //     setUsername("");
-  //   };
-
-  //   return (
-  //     <div className="search">
-  //       <div className="searchForm">
-  //         <input
-  //           type="text"
-  //           placeholder="Find a user"
-  //           onKeyDown={handleKey}
-  //           onChange={(e) => setUsername(e.target.value)}
-  //           value={username}
-  //         />
-  //       </div>
-  //       {err && <span>User not found!</span>}
-  //       {user && (
-  //         <div className="userChat" onClick={handleSelect}>
-  //           <img src={user.photoURL} alt="" />
-  //           <div className="userChatInfo">
-  //             <span>{user.displayName}</span>
-  //           </div>
-  //         </div>
-  //       )}
-  //     </div>
-  //   );
-  // };
-
-  // const Chat = () => {
-  //   const { data } = useContext(ChatContext);
-
-  //   return (
-  //     <div className="chat" style={{height: 512}}>
-  //       <div className="chatInfo">
-  //         <span>{data.user?.displayName}</span>
-  //         <div className="chatIcons">
-  //           {/* <img src={Cam} alt="" /> */}
-  //           {/* <img src={Add} alt="" />
-  //           <img src={More} alt="" /> */}
-  //           <IoArrowBackCircleOutline style={{fontSize: 24}}/>
-  //         </div>
-  //       </div>
-  //       <Messages />
-  //       <Input />
-  //     </div>
-  //   );
-  // };
+  
 
   //Nav Bar Logic
   const [coins, setCoins] = useState(0);
   const [viewChat, setViewChat] = useState(false);
+  const [allChats, setAllChats] = useState(null);
+  
   const chatSearch = useRef(null);
   const chatsList = useRef(null);
   const chatPane = useRef(null);
+
+  //  Search Bar Code
+  const [username, setUsername] = useState("");
+  const [user, setUser] = useState(null);
+  const [err, setErr] = useState(false);
+  const [chatMode, setChatMode] = useState();
+  const [currentChat, setCurrentChat] = useState(null);
+  const [newChat, setNewChat] = useState(null);
+
+  const queryParameters = new URLSearchParams(window.location.search)
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   function openChats() {
     setViewChat(!viewChat);
@@ -253,29 +53,85 @@ const ChatPage = () => {
     
   }
 
+
+
+  async function getAllChats() {
+    const response = await axios.get(`http://localhost:4000/chats}`);
+    const chats = response.data;
+    console.log("Get All Chats: ", chats)
+    setAllChats(chats)
+    setChatMode("all")
+  }
+
+  async function getAChat() {
+    console.log("Model:" + queryParameters.get("model"));
+    // const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}`);
+    const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}&userid=${currentUser.id}`);
+    const chat = response.data;
+    console.log("Get A Chat: ", chat)
+    setCurrentChat(chat)
+    setChatMode("one")
+    // chat.forEach(object => {
+    //   // do your filtering here and array push here
+    //   if (object.userid === currentUser.id) {
+    //     console.log("Get A Chat: ", chat)
+    //     setCurrentChat(chat)
+    //     setChatMode("one")
+    //   }
+
+    // });
+
+  }
+
+
+
   useEffect(() => {
+    if (chatMode === "all")
+      getAllChats();
+    else
+      getAChat();
+  }, []);
 
-    }, []);
 
-  //  Search Bar Code
-  const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
-  const [err, setErr] = useState(false);
 
-  const handleSearch = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("displayName", "==", username)
-    );
-
+  async function sendChat() {
+    setCurrentChat(newChat)
     try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
-      });
-    } catch (err) {
-      setErr(true);
+      const response = await axios.put(`http://localhost:4000/chats/${currentChat.id}`, newChat);
+      console.log('Item updated:', response.data);
+      // setCurrentChat(null)
+    } catch (error) {
+      console.error('Error updating item:', error);
+      setCurrentChat(null)
     }
+    console.log("Updated Current Chat: ", currentChat)
+  }
+
+  useEffect(() => {
+    if(currentChat!== null || newChat !== null){
+      console.log("Current Chat: ", currentChat)
+      // sendChat()
+    }
+    // getAChat();
+  }, [newChat]);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     console.log('This will run every second!');
+  //     sendChat();
+  //     getAChat();
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
+  
+  const handleSearch = async () => {
+    // const msgUser = allUsers.find(u => u.username === username);
+
+    
+
+
+
+   
   };
 
   const handleKey = (e) => {
@@ -283,71 +139,16 @@ const ChatPage = () => {
   };
 
   const searchHandleSelect = async () => {
-    //check whether the group(chats in firestore) exists, if not create
-    const combinedId =
-      currentUser.uid > user.uid
-        ? currentUser.uid + user.uid
-        : user.uid + currentUser.uid;
-    try {
-      const res = await getDoc(doc(db, "chats", combinedId));
-
-      if (!res.exists()) {
-        //create a chat in chats collection
-        await setDoc(doc(db, "chats", combinedId), { messages: [] });
-
-        //create user chats
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
-          [combinedId + ".userInfo"]: {
-            uid: user.uid,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-          },
-          [combinedId + ".date"]: serverTimestamp(),
-        });
-
-        await updateDoc(doc(db, "userChats", user.uid), {
-          [combinedId + ".userInfo"]: {
-            uid: currentUser.uid,
-            displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
-          },
-          [combinedId + ".date"]: serverTimestamp(),
-        });
-      }
-    } catch (err) {}
-
-    setUser(null);
-    setUsername("");
-  };
-
-  // List of Chats Code
-  const [chats, setChats] = useState([]);
-
-  const { dispatch } = useContext(ChatContext);
-
-  useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
-        setChats(doc.data());
-      });
-
-      return () => {
-        unsub();
-      };
-    };
-
-    currentUser.uid && getChats();
-  }, [currentUser.uid]);
+  
+  }
 
   const handleSelect = (u) => {
-    dispatch({ type: "CHANGE_USER", payload: u });
+    // dispatch({ type: "CHANGE_USER", payload: u });
     chatPane.current.style.display = "block";
     chatsList.current.style.display = "none";
     console.log("Chat with User: "+ u);
   };
 
-  // Messages/Chats Logic
-  // const { data } = useContext(ChatContext);
   
   function closeChats() {
     chatPane.current.style.display = "none"; 
@@ -379,7 +180,6 @@ const ChatPage = () => {
 
       <div className="home">
         <div className="container">
-          {/* <Sidebar /> */}
 
           {/* <Navbar /> */}
           <div className="navbar" ref={chatSearch} id="navbar">
@@ -388,7 +188,7 @@ const ChatPage = () => {
               <button onClick={() => setCoins(1 + coins)}>+ Get More</button>
               <button
                 style={{ float: "right", marginLeft: "auto" }}
-                onClick={openChats}
+                onClick={()=>{openChats()}}
               >
                 {" "}
                 {">>>"}{" "}
@@ -398,68 +198,76 @@ const ChatPage = () => {
 
 
           {/* <Search /> */}
+         { chatMode === "all" &&
           <div className="search">
-            <div className="searchForm" style={{padding: 3, display: "flex", backgroundColor: "#8e82bd"}}>
-              <FaSearch style={{margin: "auto", fontSize: 24, color: "white"}}/>
-              <input
-                type="text"
-                placeholder="Find a user"
-                onKeyDown={handleKey}
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-                style={{padding: 5, margin: "5px 5px 5px 5px", width: "90%"}}
-              />
-            </div>
-            {err && <span>User not found!</span>}
-            {user && (
-              <div className="userChat" onClick={searchHandleSelect}>
-                <img src={user.photoURL} alt="" />
-                <div className="userChatInfo">
-                  <span>{user.displayName}</span>
-                </div>
+              <div className="searchForm" style={{padding: 3, display: "flex", backgroundColor: "#8e82bd"}}>
+                <FaSearch style={{margin: "auto", fontSize: 24, color: "white"}}/>
+                <input
+                  type="text"
+                  placeholder="Find a user"
+                  onKeyDown={handleKey}
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  style={{padding: 5, margin: "5px 5px 5px 5px", width: "90%"}}
+                />
               </div>
-            )}
-          </div>
+              {err && <span>User not found!</span>}
+              {user && (
+                <div className="userChat" onClick={()=> searchHandleSelect()}>
+                  <img src={user.photoURL} alt="" />
+                  <div className="userChatInfo">
+                    <span>{user.displayName}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          }
 
 
           {/* <ChatsList /> */}
           <div className="chats" style={{backgroundColor: "#8e82ad"}} ref={chatsList}>
-            {Object.entries(chats)
-              ?.sort((a, b) => b[1].date - a[1].date)
-              .map((chat) => (
-                <div
-                  className="userChat"
-                  key={chat[0]}
-                  onClick={() => handleSelect(chat[1].userInfo)}
-                  style={{display: 'flex', padding: 3}}
-                >
-                  <img src={chat[1].userInfo.photoURL} alt="" style={{width:32, height: 32, margin: 3}}/>
+
+          
+
+            {allChats !== null && allChats.map((chat) => {
+                return(
+                  <div key={chat.id} className="userChat" onClick={() => handleSelect(chat.modelName)} style={{display: 'flex', padding: 3}}>
+                  <img src={chat.modelProfileImg} alt="" style={{width:32, height: 32, margin: 3}}/>
                   <div className="userChatInfo" style={{display: "flex"}}>
-                    <h4 style={{margin: "auto"}}>{chat[1].userInfo.displayName}: </h4>
-                    <span style={{margin: "auto", paddingLeft: 3}}>{chat[1].lastMessage?.text}</span>
+                    <h4 style={{margin: "auto"}}>{chat.modelName}: </h4>
+                    <span style={{margin: "auto", paddingLeft: 3}}> {chat.messages[chat.messages.length - 1].messageText} </span>
                   </div>
                 </div>
-              ))}
+                )
+              }
+            )}
+
+           
           </div>
 
 
           {/* <Chat ref={chatPane}/> */}
-          <div className="chat" style={{height: 512}} ref={chatPane}>
-            <div className="chatInfo">
-              <span>{data.user?.displayName}</span>
-              <div className="chatIcons">
-                {/* <img src={Cam} alt="" /> */}
-                {/* <img src={Add} alt="" />
-                <img src={More} alt="" /> */}
-                <IoArrowBackCircleOutline style={{fontSize: 36}} onClick={closeChats}/>
+          { currentChat !== null &&
+            <div className="chat" style={{height: 512}} ref={chatPane}>
+              <div className="chatInfo">
+                <img src={currentChat.modelProfileImg} alt="" style={{width: 60, height: 60, borderRadius: 80, marginRight: 15}} />
+                <h3 style={{marginRight: "auto", }}>{currentChat.modelName}</h3>
+                {
+                  chatMode === "all" &&
+                  <div className="chatIcons">
+                    <IoArrowBackCircleOutline style={{fontSize: 36}} /*onClick={()=>{closeChats()}}*//>
+                  </div>
+                }
+                
               </div>
+              <Messages data={currentChat}/>
+              <Input data={currentChat} setNewChat={setNewChat}/>
             </div>
-            <Messages />
-            <Input />
-          </div>
+          }
           
         </div>
       </div>
+      
       <div style={{ padding: 10, backgroundColor: "#a7bcff" }}>
         <div style={{height: 150,width: "90%",margin: "auto",padding: 10,borderRadius: 10,backgroundColor: "#eeeeff",}}>
           Ad

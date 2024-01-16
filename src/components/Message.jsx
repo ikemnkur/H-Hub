@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 
-const Message = ({ message }) => {
-  const { currentUser } = useContext(AuthContext);
-  const { data } = useContext(ChatContext);
+const Message = ({ message, data }) => {
+  // const { currentUser } = useContext(AuthContext);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  // const { data } = useContext(ChatContext);
 
   const ref = useRef();
 
@@ -15,23 +16,28 @@ const Message = ({ message }) => {
   return (
     <div
       ref={ref}
-      className={`message ${message.senderId === currentUser.uid && "owner"}`}
+      className={`message ${message.from === currentUser.username && "owner"}`}
     >
       <div className="messageInfo">
         <img
           src={
-            message.senderId === currentUser.uid
-              ? currentUser.photoURL
-              : data.user.photoURL
+            message.from === currentUser.username
+              ? currentUser.profileUrl
+              : data.modelProfileImg
           }
           alt=""
         />
-        <span>just now</span>
+        
       </div>
       <div className="messageContent">
-        <p>{message.text}</p>
+        <p>{message.messageText}</p>
         {message.img && <img src={message.img} alt="" />}
+        {/* <div> */}
+          <span style={{fontSize: 10}}>TIme: {message.datetime}</span>
+        {/* </div> */}
       </div>
+      
+      
     </div>
   );
 };

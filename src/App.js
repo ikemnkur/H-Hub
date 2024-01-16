@@ -2,6 +2,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import Model from "./pages/Model";
 import ChatPage from "./pages/ChatPage";
 import "./style.scss";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -12,9 +13,9 @@ function App() {
   const { currentUser } = useContext(AuthContext);
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />;
-    }
+    // if (!currentUser) {
+    //   return <Navigate to="/login" />;
+    // }
 
     return children
   };
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="model"
+            element={
+              <ProtectedRoute>
+                <Model />
               </ProtectedRoute>
             }
           />

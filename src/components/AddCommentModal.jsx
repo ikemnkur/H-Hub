@@ -1,98 +1,97 @@
 // @src/components/Modal.jsx
 
 import React from "react";
+import axios from "axios";
 import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 import { BiCommentAdd } from "react-icons/bi";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 
-const CommentModal = ({ setIsOpen }) => {
+const CommentModal = ({ setIsOpenAddCommentModal, modelName, postData }) => {
 
-  let modelName = "Example Model";
+  // let modelName = "Example Model";
+
+  const newComment = useRef(null)
 
   function onlyNumberKey(evt) {
- 
+
     // Only ASCII character in that range allowed
     let ASCIICode = (evt.which) ? evt.which : evt.keyCode
     if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
-        return false;
+      return false;
     return true;
-  } 
-  
+  }
+
+  const handlePostUpdate = async () => {
+    try {
+        // console.log("PD: ", postData)
+        const response = await axios.put(`http://localhost:3000/posts/${postData.id}`, postData);
+        console.log('Item updated:', response.data);
+    } catch (error) {
+        console.error('Error updating item:', error);
+    }
+  };
+
   function postCommentAction() {
 
-    // fetch("http://localhost:3000/posts/1", {
-		// 	method: "POST",
-		// 	body: JSON.stringify({
-		// 		thread,
-		// 		user_id: localStorage.getItem("_id"),
-		// 		title: threadTitle,
-		// 		media_link: ""
-		// 	}),
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 	},
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		alert(data.message);
-		// 		const newThread = data.data;
-		// 		setThreadList((prev) => ([newThread, ...prev]));
-		// 	})
-		// 	.catch((err) => console.error(err));
-
-    // fetch('http://localhost:3000/posts/1', {
-    //   method: 'PUT',
-    //   headers: {
-    //      'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //      'ID': 2,
-    //      'Name': 'John',
-    //      'lastName': 'Doe'
-    //   })
-    // }).then(response => response.json())
-    // .then(console.log(newPerson))
+    console.log("Post Comment");
+    postData.comments += " " + localStorage.getItem("username")+": " + newComment.current.value + ", " + 0+ ";";
+    handlePostUpdate();
   }
+
+  // function toggleIsOpen(){
+    // setIsOpenAddCommentModal(false)
+    //  console.log('isOpen: ' + isOpen)
+  // }
+
+  // useEffect(() => {
+    
+  //   isOpen(setIsOpen)
+  // },[])
 
   return (
     <>
-      <div className={styles.darkBG} onClick={() => setIsOpen(false)} />
-      <div className={styles.centered}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h5 className={styles.heading}>Comments</h5>
-          </div>
-          <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-            <RiCloseLine style={{ marginBottom: "-3px" }} />
-          </button>
-          <div style={{}}>
-
-          </div>
-          <div className={styles.modalContent}>
-            Leave a comment on {modelName}'s post:
-          </div>
-          <div className={styles.modalContent}>
-            <b>Type Comment: </b> <br />
-            <textarea type="text" maxlength="512" size="90%" style={{width: 350, height:100}} />
-             <button className={styles.addComment} onClick={() => setIsOpen(false)}>
-                <BiCommentAdd style={{fontSize: 24}}/>
+      {
+        <div>
+          <div className={styles.darkBG} onClick={() => setIsOpenAddCommentModal(false)} />
+          <div className={styles.centered}>
+            <div className={styles.addCommentModal}>
+              <div className={styles.modalHeader}>
+                <h5 className={styles.heading}>Add a Comment</h5>
+              </div>
+              <button className={styles.closeBtn} onClick={() => setIsOpenAddCommentModal(false)}>
+                <RiCloseLine style={{ marginBottom: "-3px" }} />
               </button>
-          </div>
-          <div className={styles.modalActions}>
-            <div className={styles.actionsContainer}>
-              <button className={styles.deleteBtn} onClick={postCommentAction}>
-                Post Comment
-              </button>
-              <button
-                className={styles.cancelBtn}
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
+              <div className={styles.modalContent}>
+                Leave a comment on {modelName}'s post:
+              </div>
+              <div className={styles.modalContent}>
+                <b style={{margin: 3}}>Type Comment: </b> <br />
+                <textarea ref={newComment} type="text" maxLength="512" size="90%" style={{ width: 350, height: 100, margin: 5 }} />
+                {/* <button className={styles.addComment} onClick={() => setIsOpen(false)}>
+                  <BiCommentAdd style={{ fontSize: 24 }} />
+                </button> */}
+              </div>
+              <div className={styles.modalActions}>
+                <div className={styles.actionsContainer}>
+                  <button className={styles.deleteBtn} onClick={postCommentAction}>
+                    Post Comment
+                  </button>
+                  <button
+                    className={styles.cancelBtn}
+                    onClick={() => setIsOpenAddCommentModal(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+      }
     </>
   );
 };

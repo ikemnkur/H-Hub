@@ -18,7 +18,7 @@
   }
   
   .modal {
-    width: 450px;
+    width: 420px;
     height: 450px;
     background: white;
     color: white;
@@ -26,9 +26,28 @@
     border-radius: 16px;
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
   }
-  
+
+  .addCommentModal {
+    width: 450px;
+    height: 300px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
   .tipModal {
-    width: 400px;
+    width: 350px;
+    height: 300px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
+  
+  .unlockModal {
+    width: 350px;
     height: 200px;
     background: white;
     color: white;
@@ -40,6 +59,17 @@
   .subscribeModal {
     width: 450px;
     height: 200px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
+  
+  .postModal {
+    width: 400px;
+    height: 400px;
+    
     background: white;
     color: white;
     z-index: 10;
@@ -157,4 +187,12 @@
     box-shadow: none;
     transform: none;
     background: rgba(160, 175, 255, 0.39);
+  }
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  #root::-webkit-scrollbar{
+    display: none;
   }

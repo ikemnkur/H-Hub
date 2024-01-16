@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import AddPic from "../img/addAvatar.png";
 
-const ImageCanvas = () => {
+const ImageCanvas = ({setPPImage}) => {
     const [image, setImage] = useState(null);
     const [scale, setScale] = useState(1);
     const [xpos, setPosX] = useState(0);
@@ -78,6 +79,8 @@ const ImageCanvas = () => {
     const updateOutputImage = () => {
         const canvas = canvasRef.current;
         imageRef.current.src = canvas.toDataURL();
+        setPPImage(canvas.toDataURL('image/png'))
+
     };
 
     useEffect(() => {
@@ -106,7 +109,7 @@ const ImageCanvas = () => {
                 <div>
                     <span style={{margin: "auto"}}>Final Image</span>
                     <br />
-                    <img ref={imageRef} alt="Canvas Output" width="160" height="160" style={{ border: '3px solid grey', borderRadius: '5px', margin: '3px' }} />       
+                    <img ref={imageRef} src={AddPic} alt="Canvas Output" width="160" height="160" style={{ border: '3px solid grey', borderRadius: '5px', margin: '3px' }} />       
                 </div>    
             </div>
             

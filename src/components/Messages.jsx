@@ -4,26 +4,42 @@ import { ChatContext } from "../context/ChatContext";
 import { db } from "../firebase";
 import Message from "./Message";
 
-const Messages = () => {
-  const [messages, setMessages] = useState([]);
-  const { data } = useContext(ChatContext);
+const Messages = ({data}) => {
+  // const [messages, setMessages] = useState([]);
+  // const { data } = useContext(ChatContext);
 
-  useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
+  // useEffect(() => {
+  //   const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+  //     doc.exists() && setMessages(doc.data().messages);
+  //   });
 
-    return () => {
-      unSub();
-    };
-  }, [data.chatId]);
+  //   return () => {
+  //     unSub();
+  //   };
+  // }, [data.chatId]);
 
+  // console.log(messages)
+
+  const [messages, setMessages] = useState(data.messages);
+  // const { data } = useContext(ChatContext);
+
+  // useEffect(() => {
+  //   const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+  //     doc.exists() && setMessages(doc.data().messages);
+  //   });
+
+  //   return () => {
+  //     unSub();
+  //   };
+  // }, [data.chatId]);
+  console.log("Data:", data)
+  console.log("Message: (From: "+data.from+", To: "+data.to+")")
   console.log(messages)
 
   return (
     <div className="messages">
       {messages.map((m) => (
-        <Message message={m} key={m.id} />
+        <Message message={m} key={m.id} data={data}/>
       ))}
     </div>
   );

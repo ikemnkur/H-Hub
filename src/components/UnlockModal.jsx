@@ -24,7 +24,7 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
     <>
       <div className={styles.darkBG} onClick={() => setIsOpen(false)} />
       <div className={styles.centered}>
-        <div className={styles.tipModal}>
+        <div className={styles.unlockModal}>
           <div className={styles.modalHeader}>
             <h5 className={styles.heading}>Unlock Post</h5>
           </div>
