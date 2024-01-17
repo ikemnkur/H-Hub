@@ -48,7 +48,7 @@
   
   .unlockModal {
     width: 350px;
-    height: 200px;
+    height: 210px;
     background: white;
     color: white;
     z-index: 10;
@@ -68,8 +68,8 @@
   
   .postModal {
     width: 400px;
-    height: 400px;
-    
+      min-height: 400px;
+      padding: 5px;  
     background: white;
     color: white;
     z-index: 10;

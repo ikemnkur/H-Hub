@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+// import { signInWithEmailAndPassword } from "firebase/auth";
+// import { auth } from "../firebase";
 import axios from "axios";
 
 const Login = () => {
@@ -28,25 +28,38 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loginStatus, setLoginStatus] = useState('');
 
+  const[currentUser, setCurrentUser] = useState(null)
+
+  let currentUser1;
+
   const passwordField =  useRef(null);
   const showButton =  useRef(null);
+
+  // useEffect(() => {
+  //   const temp = localStorage.getItem("currentUser")
+  //   if(temp === null || temp === "[object Object]")
+  //   navigate("/register")
+  //   // getAllPosts();
+  // }, [])
+  
 
   const handleLogin = async (e) => {
     try {
       e.preventDefault();
       console.log("Term: ", email)
       const emailResponse = await axios.get(`http://localhost:4000/users?email=${email}`);
-      const userByEmail = emailResponse.data;
+      const userByEmail = emailResponse.data[0];
       const usernameResponse = await axios.get(`http://localhost:4000/users?username=${email}`);
-      const userByUsername = usernameResponse.data;
+      const userByUsername = usernameResponse.data[0];
 
-      localStorage.setItem("userByEmail", JSON.stringify(userByEmail[0])); 
+      localStorage.setItem("userByEmail", JSON.stringify(userByEmail)); 
+      localStorage.setItem("userByUsername", JSON.stringify(userByUsername)); 
 
       let emailuser//= userByEmail[0].email//.find(u => u.email === email && u.password === password);
       let user// = userByUsername[0].username//.find(u => u.username === email && u.password === password);
       
       try {
-        emailuser = userByEmail[0].email//.find(u => u.email === email && u.password === password);
+        emailuser = userByEmail.email//.find(u => u.email === email && u.password === password);
         // user = userByUsername[0].username//.find(u => u.username === email && u.password === password);
       } catch (error) {
         
@@ -54,7 +67,7 @@ const Login = () => {
 
       try {
         // emailuser = userByEmail[0].email//.find(u => u.email === email && u.password === password);
-        user = userByUsername[0].username//.find(u => u.username === email && u.password === password);
+        user = userByUsername.username//.find(u => u.username === email && u.password === password);
       } catch (error) {
         
       }
@@ -65,21 +78,29 @@ const Login = () => {
       console.log("User: ", user);
 
       if (user === email || emailuser === email) {
-        setLoginStatus('Login successful!');
+        
 
         if (email.includes("@")) {
-          // localStorage.setItem("currentUser", emailuser);  
-          localStorage.setItem("currentUser", JSON.stringify(userByEmail[0])); 
-          console.log("logging in by email: " + emailuser.username);
+          // localStorage.setItem("currentUser", emailuser);
+          setCurrentUser(userByEmail);  
+          localStorage.setItem("currentUser", JSON.stringify(userByEmail)); 
+          console.log("logging in by email: " + userByEmail.username);
+          console.log("logging in: " + currentUser.username);
+          
         } else {
           // localStorage.setItem("currentUser", user);
-          localStorage.setItem("currentUser", JSON.stringify(userByUsername[0])); 
-          console.log("logging in by username: " + user.username);
+          setCurrentUser(userByUsername);
+          localStorage.setItem("currentUser", JSON.stringify(userByUsername)); 
+          console.log("logging in: " + currentUser.username);
+          console.log("logging in by username: " + userByUsername.username);
+          
         }
         
+        // localStorage.setItem("currentUser", )
         
-        console.log("logging in: " + user.username);
-        navigate("/")
+        setLoginStatus('Login successful!');
+        navigate("/");
+        console.log("logging in: " + currentUser.username);
         // Perform further actions here like redirecting to another page or storing user details in context/state
       } else {
         setLoginStatus('Invalid credentials');

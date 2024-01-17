@@ -30,6 +30,7 @@ const Home = () => {
   // localStorage.setItem("username", currentUser.displayName)
 
   // const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
   const [allPosts, setAllPosts] = useState(null);
@@ -75,6 +76,9 @@ const Home = () => {
   }
 
   useEffect(() => {
+    const temp = localStorage.getItem("currentUser")
+    if(temp === null || temp === "[object Object]")
+    navigate("/login")
     getAllPosts();
   }, [])
   
@@ -98,10 +102,24 @@ const Home = () => {
     }
     
   }
+
+  async function getCurrentUserData() {
+    try{
+      const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
+      const data = response.data[0];
+      console.log("Current User Data: ", data)
+      setCurrentUser(data)
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    } catch (error){
+      navigate("/login")
+    }
+  }
+
+  useEffect(() => {
+    getCurrentUserData();
+    
+  }, [])
   
-  // const handleKey = (e) => {
-  //   e.code === "Enter" && handleSearch4Models(searchInput.current.value);
-  // };
 
   return (
     <>

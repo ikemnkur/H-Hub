@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 // import HomeIcon from '@mui/icons-material/Home';
@@ -15,8 +15,9 @@ const TopNavBar = () => {
 
   const navigate = useNavigate();
   // const { currentUser } = useContext(AuthContext);
-
+  
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  // const [currentUser, setCurrentUser] = useState(null);
 
   const goToProfile = () => {
       navigate("/profile");
@@ -30,8 +31,16 @@ const TopNavBar = () => {
     console.log("hit")
   }
 
+  useEffect(() => {
+    const temp = localStorage.getItem("currentUser")
+    if(temp === null || temp === "[object Object]")
+    navigate("/login")
+    // getAllPosts();
+  }, [])
+  
+
   return (
-  <div
+  <div defer
     style={{
       alignItems: "center",
       // margin: 5,

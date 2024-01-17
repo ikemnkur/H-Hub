@@ -2,36 +2,42 @@
   "posts": [
     {
       "id": 1,
-      "postId": "12d3asc32",
+      "postId": "76nb5678mn67mn76",
       "modelName": "Sally",
       "modelProfileImg": "https://media.gettyimages.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=gi&k=20&c=tFkDOWmEyqXQmUHNxkuR5TsmRVLi5VZXYm3mVsjee0E=",
-      "mediaUrl": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Falaskan-malamute--128845239327562501%2F&psig=AOvVaw0U1O6MMZz0EIvkuqeuRcUC&ust=1704783173812000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCOi7GazYMDFQAAAAAdAAAAABAE",
+      "mediaUrl": "http://localhost:5000/images/dfpic3.jpg",
       "caption": "ABC text",
+      "title": "Bliss",
       "likes": "Maxwell, T-Rell, Jay, bootybob",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3; billybob: , 0; billybob: , 0; billybob: sgsdgsdgsdgfdsg, 0;",
-      "tips": "Maxwell:8; Logan:3; Micheal:6; Paul:12; Jonas:1; Rick:4;"
+      "tips": "Maxwell:8; Logan:3; Micheal:6; Paul:12; Jonas:1; Rick:4;",
+      "cost": 5
     },
     {
       "id": 2,
-      "postId": "12d3asc32",
+      "postId": "543b6546354vc63",
       "modelName": "Sally",
       "modelProfileImg": "https://media.gettyimages.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=gi&k=20&c=tFkDOWmEyqXQmUHNxkuR5TsmRVLi5VZXYm3mVsjee0E=",
       "mediaUrl": "https://www.elmueble.com/medio/2023/03/09/perro-de-raza-rottweiler_9f7a22a7_230309180127_900x900.jpg",
-      "caption": "ABC text",
+      "caption": "ABC text default description",
+      "title": "Candy",
       "likes": "Maxwell, T-Rell, Jay, billybob",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
-      "tips": "Maxwell:2; Logan:2; Micheal:6; Paul:2; Jonas:1; Rick:4;"
+      "tips": "Maxwell:2; Logan:2; Micheal:6; Paul:2; Jonas:1; Rick:4;",
+      "cost": 10
     },
     {
       "id": 3,
-      "postId": "12d3asc32",
+      "postId": "345v345c4352",
       "modelName": "Pammy",
       "modelProfileImg": "https://www.elmueble.com/medio/2022/02/11/aranzazu-diaz-huerta_203d6a05_120x120.jpg",
-      "mediaUrl": "https://images.unsplash.com/photo-1593270379182-fe1b1f6d67e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDV8fGJvcmRlciUyMGNvbGxpZXxlbnwwfHx8fDE2MzEzMDE0MDA&ixlib=rb-1.2.1&q=80&w=1000",
-      "caption": "ABCD text",
+      "mediaUrl": "http://localhost:5000/images/dfpic3.jpg",
+      "caption": "ABCD text not a regular caption",
+      "title": "Nice Weather",
       "likes": "Maxwell, T-Rell, Jay, billybob",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
-      "tips": "Maxwell:2; Logan:4; Micheal:6; Paul:1; Jonas:1; Rick:4;"
+      "tips": "Maxwell:2; Logan:4; Micheal:6; Paul:1; Jonas:1; Rick:4;",
+      "cost": 3
     },
     {
       "id": 4,
@@ -40,9 +46,11 @@
       "modelProfileImg": "https://www.elmueble.com/medio/2022/02/11/aranzazu-diaz-huerta_203d6a05_120x120.jpg",
       "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Bichon_Fris%C3%A9_-_studdogbichon.jpg/640px-Bichon_Fris%C3%A9_-_studdogbichon.jpg",
       "caption": "ABC 123 sample text",
+      "title": "hi guys",
       "likes": "Maxwell, T-Rell, Jay, Kye, Grover",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;",
-      "tips": "Maxwell:2; Paul:10; Jonas:6; Rick:4;"
+      "tips": "Maxwell:2; Paul:10; Jonas:6; Rick:4;",
+      "cost": 2
     }
   ],
   "comments": [
@@ -61,7 +69,8 @@
         "2": "2"
       },
       "followers": {},
-      "subscribers": {}
+      "subscribers": {},
+      "bio": "A default stock image person"
     },
     {
       "name": "Pammy",
@@ -71,7 +80,8 @@
         "4": "4"
       },
       "followers": {},
-      "subscribers": {}
+      "subscribers": {},
+      "bio": "A default stock image person"
     }
   ],
   "users": [
@@ -83,7 +93,7 @@
       "date": "",
       "profileUrl": "http://localhost:5000/images/pp2.jpg",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "0",
       "following": "",
       "subscriptions": ""
     },
@@ -95,7 +105,7 @@
       "date": "",
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "0",
       "following": "",
       "subscriptions": ""
     },
@@ -108,7 +118,7 @@
       "joinDate": 1705180813973,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "0",
       "following": "",
       "subscriptions": ""
     },
@@ -121,7 +131,7 @@
       "joinDate": 1705182857173,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "0",
       "following": "",
       "subscriptions": ""
     },
@@ -134,7 +144,7 @@
       "joinDate": 1705207728935,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "0",
       "following": "",
       "subscriptions": ""
     },
@@ -146,8 +156,8 @@
       "date": "",
       "joinDate": 1705208741566,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
-      "coins": 10,
-      "unlockedPost": "",
+      "coins": -3,
+      "unlockedPosts": "0, 2, 3",
       "following": "Sally,,Pammy,Sally,Sally",
       "subscriptions": ""
     },
@@ -160,7 +170,7 @@
       "joinDate": 1705209070169,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": 10,
-      "unlockedPost": "",
+      "unlockedPosts": "1,2,3,4",
       "following": "",
       "subscriptions": ""
     }

@@ -33,7 +33,7 @@ const Post = ({data, showButtons}) => {
 
     const navigate = useNavigate();
     // const { currentUser } = useContext(AuthContext);
-    const currentUser = localStorage.getItem("currentUser")
+    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
 
     const likesRef = useRef(null);
     //   const unlikedRef = useRef(null);
@@ -57,6 +57,7 @@ const Post = ({data, showButtons}) => {
     const [caption, setCaption] = useState(null);
     const [tips, setTips] = useState(null);
     const [scale, setScale] = useState(0.5);
+    const [unlockStatus, setLockedStatus] = useState(false);
 
     //used to control the close/open state of the modal
     const [isOpenComment, setIsOpenComment] = useState(false);
@@ -64,9 +65,21 @@ const Post = ({data, showButtons}) => {
     const [isOpenSubscribe, setIsOpenSubscribe] = useState(false);
     const [isOpenUnlock, setIsOpenUnlock] = useState(false);
 
+    async function getCurrentUserData() {
+        try{
+        const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
+        const data = response.data[0];
+        console.log("Current User Data: ", data)
+        setCurrentUser(data)
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        } catch (error){
+            navigate("/login")
+        }
+    }
+    
 
-    let postData = { "id": 1, "postId": "12d3asc32", "modelName": "pamm", "modelProfileImg": "http://", "mediaUrl": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Falaskan-malamute--128845239327562501%2F&psig=AOvVaw0U1O6MMZz0EIvkuqeuRcUC&ust=1704783173812000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCOi7GazYMDFQAAAAAdAAAAABAE", "caption": "ABC text", "likes": "Maxwell, T-Rell, Jay", "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;", "tips": "Maxwell:2;" };
-    postData = data;
+    // let postData = { "id": 1, "postId": "12d3asc32", "modelName": "pamm", "modelProfileImg": "http://", "mediaUrl": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Falaskan-malamute--128845239327562501%2F&psig=AOvVaw0U1O6MMZz0EIvkuqeuRcUC&ust=1704783173812000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCOi7GazYMDFQAAAAAdAAAAABAE", "caption": "ABC text", "likes": "Maxwell, T-Rell, Jay", "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;", "tips": "Maxwell:2;" };
+    let postData = data;
     // const getPostData = (threadTitle) => {
     //     fetch("http://localhost:3000/posts/1", {
     //         method: "GET",
@@ -127,7 +140,7 @@ const Post = ({data, showButtons}) => {
     const handlePostUpdate = async () => {
         try {
             // console.log("PD: ", postData)
-            const response = await axios.put(`http://localhost:3000/posts/${postData.id}`, postData);
+            const response = await axios.put(`http://localhost:4000/posts/${postData.id}`, postData);
             console.log('Item updated:', response.data);
         } catch (error) {
             console.error('Error updating item:', error);
@@ -191,6 +204,10 @@ const Post = ({data, showButtons}) => {
 
     useEffect(() => {
         setTimeout(() => {
+
+            getCurrentUserData();
+
+            console.log("PD: ", postData)
             // setCount((count) => count + 1);
             setPostID(postData.postId);
             //   console.log("post ID: " + postID);
@@ -209,12 +226,15 @@ const Post = ({data, showButtons}) => {
             setTips(postData.tips.split(";").length);
             tipsRef.current.innerHTML = postData.tips.split(";").length;
             // console.log(JSON.stringify(postData));
-            // console.log("Hello world");
+            console.log("PostData ID: ", postData.id);
+
+            if(currentUser.unlockedPosts.includes(postData.id))
+                setLockedStatus(true)
 
             if(postData.likes.includes(localStorage.getItem("username"))){
                 setLiked(true);
             }
-        }, 1000);
+        }, 10);
     }, []);
 
     return (
@@ -223,7 +243,7 @@ const Post = ({data, showButtons}) => {
 
             {isOpenComment && <CommentsModal setIsOpen={setIsOpenComment} data={postData.comments} modelName={postData.modelName} postData={postData}/>}
 
-            {isOpenUnlock && <UnlockModal setIsOpen={setIsOpenUnlock} tips={postData.tips} modelName={postData.modelName} />}
+            {isOpenUnlock && <UnlockModal setIsOpen={setIsOpenUnlock} tips={postData.tips} postData={postData} cost={postData.cost} unlockStatus={unlockStatus}/>}
 
             {isOpenSubscribe && <SubscribeModal setIsOpen={setIsOpenSubscribe} modelName={postData.modelName} />}
 
@@ -261,7 +281,7 @@ const Post = ({data, showButtons}) => {
                                 {" "}
                                 <FaCommentDollar /> Chat
                             </button>
-                            <button style={{ margin: 3 }} onClick={subscribeAction}> $ubscribe</button>
+                            <button style={{ margin: 3 }} onClick={subscribeAction}> $Subscribe</button>
                             <button style={{ margin: 3, padding: "3px 7px", backgroundColor: "#FF4444", border: "none", borderRadius: 5 }}> X </button>
                         </div>
                         }
@@ -292,7 +312,7 @@ const Post = ({data, showButtons}) => {
                                     backgroundColor: "#dedeff",
                                 }}
                             >
-                                <h4>Title</h4>
+                                <h4>{postData.title}</h4>
                                 <p ref={captionRef} style={{ padding: 3, margin: 3 }}>
                                     Whats up here's a nice pic
                                 </p>
@@ -334,7 +354,7 @@ const Post = ({data, showButtons}) => {
                             <GiPayMoney
                                 style={{ fontSize: 24, margin: "10px 3px 3px 0px" }}
                             />
-                            <span style={{ margin: "auto" }}>Tip</span>
+                            {/* <span style={{ margin: "auto" }}>Tip</span> */}
                         </div>
 
                         <div
@@ -347,9 +367,12 @@ const Post = ({data, showButtons}) => {
                             onClick={unlockAction}
                         //   onClick={loadImageAction}
                         >
+                        {   !unlockStatus &&
                             <button style={{ margin: 3 }}>
                                 <IoIosUnlock /> Unlock{" "}
                             </button>
+                        }
+                            
                         </div>
                     </div>
                 </div>

@@ -27,7 +27,7 @@ const CommentModal = ({ setIsOpenAddCommentModal, modelName, postData }) => {
   const handlePostUpdate = async () => {
     try {
         // console.log("PD: ", postData)
-        const response = await axios.put(`http://localhost:3000/posts/${postData.id}`, postData);
+        const response = await axios.put(`http://localhost:4000/posts/${postData.id}`, postData);
         console.log('Item updated:', response.data);
     } catch (error) {
         console.error('Error updating item:', error);
