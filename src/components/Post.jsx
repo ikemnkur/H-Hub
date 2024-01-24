@@ -28,12 +28,14 @@ import { GiPayMoney } from "react-icons/gi";
 
 import { AuthContext } from "../context/AuthContext";
 import { useState } from "react";
+// import { empty } from "uuidv4";
 
 const Post = ({data, showButtons}) => {
 
     const navigate = useNavigate();
     // const { currentUser } = useContext(AuthContext);
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+    const [postComments, setPostComments] = useState(null);
 
     const likesRef = useRef(null);
     //   const unlikedRef = useRef(null);
@@ -58,6 +60,9 @@ const Post = ({data, showButtons}) => {
     const [tips, setTips] = useState(null);
     const [scale, setScale] = useState(0.5);
     const [unlockStatus, setLockedStatus] = useState(false);
+    const [following, setFollowing] = useState(false);
+    const [subscribed, setSubscribed] = useState(false);
+    const [postTips, setPostTips] = useState(false);
 
     //used to control the close/open state of the modal
     const [isOpenComment, setIsOpenComment] = useState(false);
@@ -77,39 +82,47 @@ const Post = ({data, showButtons}) => {
         }
     }
     
-
-    // let postData = { "id": 1, "postId": "12d3asc32", "modelName": "pamm", "modelProfileImg": "http://", "mediaUrl": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2Falaskan-malamute--128845239327562501%2F&psig=AOvVaw0U1O6MMZz0EIvkuqeuRcUC&ust=1704783173812000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCOi7GazYMDFQAAAAAdAAAAABAE", "caption": "ABC text", "likes": "Maxwell, T-Rell, Jay", "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3;", "tips": "Maxwell:2;" };
+    async function getComments() {
+        try{
+        const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+        const data = response.data;
+        console.log("Post Comments Data: ", data)
+        setPostComments(data)
+        // localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        } catch (error){
+            // navigate("/login")
+            console.log("Fetching commments failed.")
+            let noPost = {
+                "id": 0,
+                "username": "Bot",
+                "text": "No comments yet, be the first to comment!",
+                "postId": 1
+            }
+            setPostComments(noPost)
+        }
+    }
+    
+    async function getTips() {
+        try{
+        const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+        const data = response.data;
+        console.log("Post Comments Data: ", data)
+        setPostTips(data)
+        // localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        } catch (error){
+            // navigate("/login")
+            console.log("Fetching commments failed.")
+            let noTips = {
+                "postId": 0,
+                "tipUserId": "null",
+                "tipUsername": "Bot",
+                "tipAmount": 0
+            }
+            setPostTips(noTips)
+        }
+    }
+    
     let postData = data;
-    // const getPostData = (threadTitle) => {
-    //     fetch("http://localhost:3000/posts/1", {
-    //         method: "GET",
-    //         // body: JSON.stringify({
-    //         // 	thread,
-    //         // 	user_id: localStorage.getItem("_id"),
-    //         // 	title: threadTitle,
-    //         // 	media_link: ""
-    //         // }),
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     })
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             // alert(data.message);
-    //             // const newThread = data.data;
-    //             // setThreadList((prev) => ([newThread, ...prev]));
-    //             postData = data;
-    //             console.log(JSON.stringify(data));
-    //         })
-    //         .catch((err) => console.error(err));
-    // };
-
-    // Run the get fetch request for all the posts data once
-    // useEffect(() => {
-    //     // getPostData();
-    //     postData = data;
-    // }, []);
-
 
     function subscribeAction() {
         setIsOpenSubscribe(true)
@@ -119,7 +132,6 @@ const Post = ({data, showButtons}) => {
 
     function likeAction() {
 
-     
         console.log("Liked: " + !liked)
         //if already liked then reduce the number of likes
         if (liked === true) {
@@ -133,7 +145,6 @@ const Post = ({data, showButtons}) => {
         setLiked(!liked)
         // postData.likes += ", " + localStorage.getItem("username");
         handlePostUpdate();
-    
         
     }
 
@@ -150,12 +161,12 @@ const Post = ({data, showButtons}) => {
     function commentAction() {
         setIsOpenComment(true)
         console.log("comment")
+        getComments()
     }
 
     function tipAction() {
         setIsOpenTip(true)
         console.log("tip")
-
     }
 
     function unlockAction() {
@@ -215,8 +226,11 @@ const Post = ({data, showButtons}) => {
             setModelName(postData.modelName);
             profilePicRef.current.src = postData.modelProfileImg;
             setModelProfilePic(postData.modelProfileImg);
-            commentsRef.current.innerHTML = postData.comments.split(";").length - 1;
+            commentsRef.current.innerHTML = postComments.length;
+
+            getComments()
             setComments(postData.comments.split(";").length)
+            
             likesRef.current.innerHTML = postData.likes.split(",").length;
             setLikes(postData.likes.split(",").length)
            
@@ -241,7 +255,7 @@ const Post = ({data, showButtons}) => {
         <>
             {isOpenTip && <TipModal setIsOpen={setIsOpenTip} tips={postData.tips} modelName={postData.modelName} />}
 
-            {isOpenComment && <CommentsModal setIsOpen={setIsOpenComment} data={postData.comments} modelName={postData.modelName} postData={postData}/>}
+            {isOpenComment && <CommentsModal setIsOpen={setIsOpenComment} postComments={postComments} modelName={postData.modelName} postData={postData}/>}
 
             {isOpenUnlock && <UnlockModal setIsOpen={setIsOpenUnlock} tips={postData.tips} postData={postData} cost={postData.cost} unlockStatus={unlockStatus}/>}
 
@@ -276,11 +290,16 @@ const Post = ({data, showButtons}) => {
                         </div>
                         {showButtons && 
                         <div style={{ marginLeft: "auto" }}>
-                            <button style={{ margin: 3 }}>+ Follow</button>
+
+                            <button style={{ margin: 3 }}> {following ? 'Follow' : 'Unfollow'}</button>
+
                             <button style={{ margin: 3 }} onClick={() => { navigate('/chat?model=' + modelName) }}>
                                 {" "}
                                 <FaCommentDollar /> Chat
                             </button>
+                            {   subscribed && <button style={{ margin: 3 }} onClick={subscribeAction}> $Subscribe</button> }
+                            {/* {   !subscribed && <span>Subscribed</span> } */}
+
                             <button style={{ margin: 3 }} onClick={subscribeAction}> $Subscribe</button>
                             <button style={{ margin: 3, padding: "3px 7px", backgroundColor: "#FF4444", border: "none", borderRadius: 5 }}> X </button>
                         </div>

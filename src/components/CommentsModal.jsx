@@ -7,46 +7,56 @@ import { BiCommentAdd } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
 
 
-const CommentModal = ({ setIsOpen, data, modelName, postData }) => {
+const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
 
   // let modelName = "Example Model";
-  let commentIdNumber = 1;
-  let comments = data.split(";")
+  // let commentIdNumber = 1;
+  // let comments = data.split(";")
+
 
   // const [isOpenAddComments, setIsOpenAddComments] = useState(false);
   const [addCommentModal, setAddCommentModal] = useState(false);
 
-  function onlyNumberKey(evt) {
 
-    // Only ASCII character in that range allowed
-    let ASCIICode = (evt.which) ? evt.which : evt.keyCode
-    if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
-      return false;
-    return true;
-  }
 
   let votes;
 
   function likeCommentAction(id) {
-    // commentsArray = [comments.length]
     let num = id.replace("comment#", "");
-    let number = parseInt(num)
+    let idNum = parseInt(num)
+    let comment = getCommentById(idNum)[0]
+    console.log("dislike comment: ", comment)
     try {
-       document.getElementById(id).innerText = number+1
+      if (parseInt(document.getElementById(id).innerText) < parseInt(comment.likes))
+        document.getElementById(id).innerText = parseInt(comment.likes)
+      else
+        document.getElementById(id).innerText = parseInt(comment.likes) + 1
     } catch (error) {
-      console.log("task failed")
+      console.log("like task failed")
     }
-   
-
   };
+
+  function getCommentById(idNum) {
+    return postComments.filter(
+      function (postComments) { 
+        // console.log("idNum: ", idNum)
+        return postComments.id === idNum 
+      }
+    );
+  }
 
   function dislikeCommentAction(id) {
     let num = id.replace("comment#", "");
-    let number = parseInt(num)
-     try {
-       document.getElementById(id).innerText = number-1
+    let idNum = parseInt(num)
+    let comment = getCommentById(idNum)[0]
+    console.log("dislike comment: ", comment)
+    try {
+      if (parseInt(document.getElementById(id).innerText) > parseInt(comment.likes))
+        document.getElementById(id).innerText = parseInt(comment.likes)
+      else
+        document.getElementById(id).innerText = parseInt(comment.likes) - 1
     } catch (error) {
-      console.log("task failed")
+      console.log("dislike task failed")
     }
   };
 
@@ -72,13 +82,13 @@ const CommentModal = ({ setIsOpen, data, modelName, postData }) => {
           </button>
 
           <div style={{ background: "grey", padding: 5, width: "95%", margin: "auto" }}>
-            {comments.map((comment) => {
+            {postComments.map((comment) => {
               let name, text, likes;
-              let idText = "comment#" + commentIdNumber
-              if (comment.length > 0) {
-                name = comment.split(":")[0];
-                text = comment.split(":")[1].split(",")[0];
-                likes = comment.split(":")[1].split(",")[1];
+              let idText = "comment#" + comment.id
+              if (1) { //(comment.length > 0) {
+                name = comment.username //comment.split(":")[0];
+                text = comment.text //comment.split(":")[1].split(",")[0];
+                likes = comment.likes //comment.split(":")[1].split(",")[1];
 
                 // console.log("Comments: " + comment)
                 // console.log("Comment Name: " + comment.split(":")[0])
@@ -126,7 +136,7 @@ const CommentModal = ({ setIsOpen, data, modelName, postData }) => {
               </button>
               <button
                 className={styles.cancelBtn}
-                onClick={() =>  setIsOpen(false)}
+                onClick={() => setIsOpen(false)}
               >
                 Cancel
               </button>
@@ -134,7 +144,7 @@ const CommentModal = ({ setIsOpen, data, modelName, postData }) => {
           </div>
         </div>
       </div>
-      {addCommentModal && <AddCommentModal setIsOpenAddCommentModal={setAddCommentModal} modelName={modelName} postData={postData}/>}
+      {addCommentModal && <AddCommentModal setIsOpenAddCommentModal={setAddCommentModal} modelName={modelName} postData={postData} />}
     </>
   );
 };

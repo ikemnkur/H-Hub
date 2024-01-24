@@ -56,8 +56,90 @@
   "comments": [
     {
       "id": 1,
-      "body": "some comment",
+      "username": "aaa",
+      "text": "some things",
+      "likes": 4,
       "postId": 1
+    },{
+      "id": 2,
+      "username": "test",
+      "text": "abd objest",
+      "likes": 4,
+      "postId": 2
+    },{
+      "id": 3,
+      "username": "testuser",
+      "text": "this is a cool comment",
+      "likes": 4,
+      "postId": 3
+    },{
+      "id": 4,
+      "username": "billy",
+      "text": "sdfsdf",
+      "likes": 4,
+      "postId": 4
+    },{
+      "id": 5,
+      "username": "sam",
+      "text": "some comment",
+      "likes": 4,
+      "postId": 1
+    },{
+      "id": 6,
+      "username": "billy",
+      "text": "what a cool post",
+      "likes": 4,
+      "postId": 2
+    },{
+      "id": 7,
+      "username": "sam",
+      "text": "some awesome comment",
+      "likes": 4,
+      "postId": 3
+    },{
+      "id": 8,
+      "username": "billy",
+      "text": "what a nice post",
+      "likes": 4,
+      "postId": 4
+    }
+  ],
+  "tips": [
+    {
+      "postId": 1,
+      "tipUserId": "49e1f904-9051-4dce-93e3-eb737d701ec7",
+      "tipUsername": "test",
+      "tipAmount": 3
+    },{
+      "postId": 1,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "testuser",
+      "tipAmount": 3
+    },{
+      "postId": 2,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "testuser",
+      "tipAmount": 2
+    },{
+      "postId": 2,
+      "tipUserId": "f0a0944e-b064-4d1f-b5ef-30fb484905e8",
+      "tipUsername": "mike",
+      "tipAmount": 6
+    },{
+      "postId": 3,
+      "tipUserId": "79225859-cf69-422e-bff5-023esee9f237",
+      "tipUsername": "billy",
+      "tipAmount": 1
+    },{
+      "postId": 4,
+      "tipUserId": "234q5859-cf69-42se-bff5-022ddee9f237",
+      "tipUsername": "sam",
+      "tipAmount": 5
+    },{
+      "postId": 4,
+      "tipUserId": "2a32d32a-859c-4a75-8783-5aee2bc70d8d",
+      "tipUsername": "aaa",
+      "tipAmount": 5
     }
   ],
   "models": [
@@ -124,9 +206,9 @@
     },
     {
       "id": "f0a0944e-b064-4d1f-b5ef-30fb484905e8",
-      "username": "aaa2",
-      "password": "aaa2",
-      "email": "aaa2@aaa.com",
+      "username": "mike",
+      "password": "mike",
+      "email": "mike@gmail.com",
       "date": "",
       "joinDate": 1705182857173,
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
