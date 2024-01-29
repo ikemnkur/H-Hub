@@ -111,7 +111,8 @@ const Login = () => {
     }
   };
 
-  function showPassword() {
+  function showPassword(e) {
+    e.preventDefault();
     if (passwordField.current.type !== "text"){
       passwordField.current.type = "text";
       showButton.current.innerHTML = "Hide";
@@ -138,7 +139,7 @@ const Login = () => {
             <button onClick={showPassword} ref={showButton} style={{}}>Show</button> 
           </div>
           <button>Sign in</button>
-          {err && <span>Something went wrong</span>}
+          {err && <span>Something went wrong please try agian.</span>}
         </form>
         <div><b>{loginStatus}</b></div>
         <p>You don't have an account? <Link to="/register">Register</Link></p>

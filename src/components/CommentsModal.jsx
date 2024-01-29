@@ -5,6 +5,7 @@ import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 import { BiCommentAdd } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
+import axios from "axios";
 
 
 const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
@@ -16,16 +17,42 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
 
   // const [isOpenAddComments, setIsOpenAddComments] = useState(false);
   const [addCommentModal, setAddCommentModal] = useState(false);
+  localStorage.setItem("comments", JSON.stringify(postComments))
+   
+  const handlePostUpdate = async (id, updatedComment) => {
+    try {
+        // console.log("PD: ", postData)
+        const response = await axios.put(`http://localhost:4000/comments?id=${id}`, updatedComment);
+        console.log('Item updated:', response.data);
+    } catch (error) {
+        console.error('Error updating item:', error);
+    }
+  };
 
+  // function voteCommentAction() {
 
+  //   console.log("Post Comment");
+  //   // postData.comments += " " + localStorage.getItem("username")+": " + newComment.current.value + ", " + 0+ ";";
+  //   // let id = uuid();
+    
+      
+    
+  //   // getPost
+  //   console.log("Voted on Comment: ", newUserComment)
+  //   handlePostUpdate(id, newUserComment);
+  // }
 
-  let votes;
+  let commentIndex = 0;
 
   function likeCommentAction(id) {
     let num = id.replace("comment#", "");
-    let idNum = parseInt(num)
-    let comment = getCommentById(idNum)[0]
-    console.log("dislike comment: ", comment)
+    let idNum = parseInt(num);
+    const comment = getCommentById(idNum)[0];
+    console.log("like comment: ", comment);
+    let updatedComment = comment;
+    console.log("CI: ", commentIndex-1)
+    updatedComment[commentIndex-1].likes = comment[commentIndex-1].likes+1;
+    handlePostUpdate(idNum, updatedComment);
     try {
       if (parseInt(document.getElementById(id).innerText) < parseInt(comment.likes))
         document.getElementById(id).innerText = parseInt(comment.likes)
@@ -37,9 +64,12 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
   };
 
   function getCommentById(idNum) {
+    let i = 0
     return postComments.filter(
       function (postComments) { 
         // console.log("idNum: ", idNum)
+        i++;
+        commentIndex = i
         return postComments.id === idNum 
       }
     );
@@ -85,6 +115,7 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
             {postComments.map((comment) => {
               let name, text, likes;
               let idText = "comment#" + comment.id
+              console.log("creating comment: ", comment )
               if (1) { //(comment.length > 0) {
                 name = comment.username //comment.split(":")[0];
                 text = comment.text //comment.split(":")[1].split(",")[0];

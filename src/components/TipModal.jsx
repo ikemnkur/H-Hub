@@ -8,6 +8,9 @@ const Modal = ({ setIsOpen, tips, modelName }) => {
 
   // let modelName = "Example Model";
   // modelName = modelname;
+
+  console.log("")
+
   console.log("Tips: ", tips)
 
   let index = 0;

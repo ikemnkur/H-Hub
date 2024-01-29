@@ -9,16 +9,33 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 
+const { v4 : uuid } = require("uuid");
+
 const CommentModal = ({ setIsOpenAddCommentModal, modelName, postData }) => {
 
   // let modelName = "Example Model";
 
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  // const modelName = postData.modelName;
+  
+  async function getCurrentUserData() {
+
+    const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
+    const data = response.data[0];
+    console.log("Current User Data: ", data)
+    setCurrentUser(data)
+
+  }
+
+  getCurrentUserData();
+
   const newComment = useRef(null)
   
-  const handlePostUpdate = async () => {
+  const handlePostUpdate = async (id, newUserComment) => {
     try {
         // console.log("PD: ", postData)
-        const response = await axios.put(`http://localhost:4000/posts/${postData.id}`, postData);
+
+        const response = await axios.post(`http://localhost:4000/comments?id=${id}`, newUserComment);
         console.log('Item updated:', response.data);
     } catch (error) {
         console.error('Error updating item:', error);
@@ -28,8 +45,18 @@ const CommentModal = ({ setIsOpenAddCommentModal, modelName, postData }) => {
   function postCommentAction() {
 
     console.log("Post Comment");
-    postData.comments += " " + localStorage.getItem("username")+": " + newComment.current.value + ", " + 0+ ";";
-    handlePostUpdate();
+    // postData.comments += " " + localStorage.getItem("username")+": " + newComment.current.value + ", " + 0+ ";";
+    let id = uuid();
+    let newUserComment = {
+      "id": id,
+      "username": currentUser.username,
+      "text": newComment.current.value,
+      "likes": 0,
+      "postId": postData.id
+    }
+    // getPost
+    console.log("New Comment: ", newUserComment)
+    handlePostUpdate(id, newUserComment);
   }
 
   // function toggleIsOpen(){

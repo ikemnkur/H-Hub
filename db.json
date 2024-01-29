@@ -8,7 +8,7 @@
       "mediaUrl": "http://localhost:5000/images/dfpic3.jpg",
       "caption": "ABC text",
       "title": "Bliss",
-      "likes": "Maxwell, T-Rell, Jay, bootybob",
+      "likes": "Maxwell, T-Rell, Jay, bootybob, null",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3; billybob: , 0; billybob: , 0; billybob: sgsdgsdgsdgfdsg, 0;",
       "tips": "Maxwell:8; Logan:3; Micheal:6; Paul:12; Jonas:1; Rick:4;",
       "cost": 5
@@ -58,49 +58,84 @@
       "id": 1,
       "username": "aaa",
       "text": "some things",
-      "likes": 4,
+      "likes": 3,
       "postId": 1
-    },{
+    },
+    {
+      "id": 10,
+      "username": "aaa",
+      "text": "a very cool thing",
+      "likes": 2,
+      "postId": 1
+    },
+    {
       "id": 2,
       "username": "test",
       "text": "abd objest",
       "likes": 4,
       "postId": 2
-    },{
+    },
+    {
       "id": 3,
       "username": "testuser",
       "text": "this is a cool comment",
       "likes": 4,
       "postId": 3
-    },{
+    },
+    {
       "id": 4,
       "username": "billy",
       "text": "sdfsdf",
       "likes": 4,
       "postId": 4
-    },{
+    },
+    {
       "id": 5,
       "username": "sam",
       "text": "some comment",
       "likes": 4,
       "postId": 1
-    },{
+    },
+    {
       "id": 6,
       "username": "billy",
       "text": "what a cool post",
       "likes": 4,
       "postId": 2
-    },{
+    },
+    {
       "id": 7,
       "username": "sam",
       "text": "some awesome comment",
       "likes": 4,
       "postId": 3
-    },{
+    },
+    {
       "id": 8,
       "username": "billy",
       "text": "what a nice post",
       "likes": 4,
+      "postId": 4
+    },
+    {
+      "id": "345aa104-d5d5-40db-abdd-1e6737f00c4c",
+      "username": "testuser",
+      "text": "asd",
+      "likes": 0,
+      "postId": 2
+    },
+    {
+      "id": "c28a04fe-3cd7-41e8-b7d5-4f3c1f6566ab",
+      "username": "testuser",
+      "text": "hello world\n",
+      "likes": 0,
+      "postId": 4
+    },
+    {
+      "id": "c83c1e68-f12e-4e8d-904e-76e62b0828d7",
+      "username": "testuser",
+      "text": "dsdsvbsdv",
+      "likes": 0,
       "postId": 4
     }
   ],
@@ -110,32 +145,38 @@
       "tipUserId": "49e1f904-9051-4dce-93e3-eb737d701ec7",
       "tipUsername": "test",
       "tipAmount": 3
-    },{
+    },
+    {
       "postId": 1,
       "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
       "tipUsername": "testuser",
       "tipAmount": 3
-    },{
+    },
+    {
       "postId": 2,
       "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
       "tipUsername": "testuser",
       "tipAmount": 2
-    },{
+    },
+    {
       "postId": 2,
       "tipUserId": "f0a0944e-b064-4d1f-b5ef-30fb484905e8",
       "tipUsername": "mike",
       "tipAmount": 6
-    },{
+    },
+    {
       "postId": 3,
       "tipUserId": "79225859-cf69-422e-bff5-023esee9f237",
       "tipUsername": "billy",
       "tipAmount": 1
-    },{
+    },
+    {
       "postId": 4,
       "tipUserId": "234q5859-cf69-42se-bff5-022ddee9f237",
       "tipUsername": "sam",
       "tipAmount": 5
-    },{
+    },
+    {
       "postId": 4,
       "tipUserId": "2a32d32a-859c-4a75-8783-5aee2bc70d8d",
       "tipUsername": "aaa",
@@ -240,7 +281,7 @@
       "profileUrl": "http://localhost:5000/images/defaultpp.png",
       "coins": -3,
       "unlockedPosts": "0, 2, 3",
-      "following": "Sally,,Pammy,Sally,Sally",
+      "following": "Sally,Pammy",
       "subscriptions": ""
     },
     {

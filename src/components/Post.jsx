@@ -63,6 +63,7 @@ const Post = ({data, showButtons}) => {
     const [following, setFollowing] = useState(false);
     const [subscribed, setSubscribed] = useState(false);
     const [postTips, setPostTips] = useState(false);
+    const [numofComments, setnumofComments] = useState(0);
 
     //used to control the close/open state of the modal
     const [isOpenComment, setIsOpenComment] = useState(false);
@@ -72,26 +73,32 @@ const Post = ({data, showButtons}) => {
 
     async function getCurrentUserData() {
         try{
-        const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
-        const data = response.data[0];
-        console.log("Current User Data: ", data)
-        setCurrentUser(data)
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
+            const data = response.data[0];
+            console.log("Current User Data: ", data)
+            setCurrentUser(data)
+            localStorage.setItem("currentUser", JSON.stringify(currentUser));
         } catch (error){
             navigate("/login")
         }
     }
-    
+    // let numofComments = 0;
+    let commentsArray;
     async function getComments() {
         try{
-        const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
-        const data = response.data;
-        console.log("Post Comments Data: ", data)
-        setPostComments(data)
-        // localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            console.log("post id: ", postData.id)
+            const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+            console.log("Post Comments Data: ", response.data);
+            const data = response.data
+            console.log("Post Comments Data: ", data)
+            setnumofComments(data.length);
+            console.log("number of comments: ", numofComments);
+            setPostComments(data)
+            commentsArray = data;
+            // localStorage.setItem("currentUser", JSON.stringify(currentUser));
         } catch (error){
             // navigate("/login")
-            console.log("Fetching commments failed.")
+            console.log("Fetching commments failed: ", error)
             let noPost = {
                 "id": 0,
                 "username": "Bot",
@@ -99,6 +106,7 @@ const Post = ({data, showButtons}) => {
                 "postId": 1
             }
             setPostComments(noPost)
+            commentsArray = noPost;
         }
     }
     
@@ -124,6 +132,16 @@ const Post = ({data, showButtons}) => {
     
     let postData = data;
 
+    const handlePostUpdate = async () => {
+        try {
+            // console.log("PD: ", postData)
+            const response = await axios.put(`http://localhost:4000/posts/${postData.id}`, postData);
+            console.log('Item updated:', response.data);
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
     function subscribeAction() {
         setIsOpenSubscribe(true)
         console.log("Subscribing")
@@ -136,7 +154,7 @@ const Post = ({data, showButtons}) => {
         //if already liked then reduce the number of likes
         if (liked === true) {
             setLikes(likes - 1)
-            postData.likes.replace(`, ${localStorage.getItem("username")}`);
+            postData.likes.replace(`, ${localStorage.getItem("username")}`, "");
             
         } else {
             setLikes(likes + 1)
@@ -147,16 +165,6 @@ const Post = ({data, showButtons}) => {
         handlePostUpdate();
         
     }
-
-    const handlePostUpdate = async () => {
-        try {
-            // console.log("PD: ", postData)
-            const response = await axios.put(`http://localhost:4000/posts/${postData.id}`, postData);
-            console.log('Item updated:', response.data);
-        } catch (error) {
-            console.error('Error updating item:', error);
-        }
-    };
 
     function commentAction() {
         setIsOpenComment(true)
@@ -226,10 +234,11 @@ const Post = ({data, showButtons}) => {
             setModelName(postData.modelName);
             profilePicRef.current.src = postData.modelProfileImg;
             setModelProfilePic(postData.modelProfileImg);
-            commentsRef.current.innerHTML = postComments.length;
+            // commentsRef.current.innerHTML = postComments.length;
+            commentsRef.current.innerHTML = numofComments;
 
             getComments()
-            setComments(postData.comments.split(";").length)
+            // setComments(postComments)
             
             likesRef.current.innerHTML = postData.likes.split(",").length;
             setLikes(postData.likes.split(",").length)
@@ -248,8 +257,8 @@ const Post = ({data, showButtons}) => {
             if(postData.likes.includes(localStorage.getItem("username"))){
                 setLiked(true);
             }
-        }, 10);
-    }, []);
+        }, 500);
+    }, [numofComments]);
 
     return (
         <>

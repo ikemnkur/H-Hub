@@ -42,6 +42,10 @@ const AccountSettings = () => {
 
   const queryParameters = new URLSearchParams(window.location.search)
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  let subscribe = false; let followIndex = 0;
+  let following = false;
+
+  const navigate = useNavigate();
 
   // let post = {
   //   "id": 1,
@@ -72,8 +76,32 @@ const AccountSettings = () => {
     const data = response.data[0];
     console.log("Current User Data: ", data)
     setCurrentUser(data)
-
+    let strArray = currentUser.following.split(",")
+    for (var j=0; j<strArray.length; j++) {
+      if (strArray[j].match(modelName)) {
+        following = true;
+        followIndex = j;
+      }  
+    }
+    try {
+      strArray = currentUser.subscribe.split(",")
+    } catch (error) {
+      strArray = [","];
+    }
+    
+    for (var j=0; j<strArray.length; j++) {
+      try {
+        if (strArray[j].match(modelName)) {
+          following = true;
+          followIndex = j;
+        }  
+      } catch (error) {
+        console.log("User not subscribed")
+      }
+    }
+    
   }
+
 
 
   async function getModelPost() {
@@ -121,9 +149,9 @@ const AccountSettings = () => {
             <h1 style={{ marginTop: "auto",}}> {modelName}
               <div style={{ display: "flex", gap: 10, paddingTop: 5 }} >
                 {/* <b>Coins: </b> <span style={{margin: 5}}> 5 </span> */}
-                <button> Follow </button>
-                <button> Chat </button>
-                <button> Subscribe </button>
+                <button> {following ? 'Unfollow' : 'Follow'}  </button>
+                <button onClick={() => { navigate('/chat?model=' + modelName) }}> Chat </button>
+                <button> {subscribe ? 'Unsubscribe' : 'Subscribe'} </button>
               </div>
             </h1>
           </div>
