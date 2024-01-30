@@ -99,7 +99,7 @@ const Login = () => {
             console.log("logging in by email: " + userByEmail.username);
             console.log("logging in: " + currentUser.username);
           } 
-
+          secondFunction()
           // setCurrentUser(userByEmail);  
           // localStorage.setItem("currentUser", JSON.stringify(userByEmail)); 
           
@@ -110,6 +110,7 @@ const Login = () => {
           const firstFunction = async() => {
             setCurrentUser(userByUsername);
             localStorage.setItem("currentUser", JSON.stringify(userByUsername)); 
+            console.alert(localStorage.getItem("currentUser"))
             return 1;
           }
 
@@ -118,11 +119,9 @@ const Login = () => {
             console.log("logging in: " + currentUser.username);
             console.log("logging in by username: " + userByUsername.username);
           } 
+          secondFunction()
 
 
-         
-         
-          
         }
         
         // localStorage.setItem("currentUser", )

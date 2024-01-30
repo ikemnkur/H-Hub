@@ -230,7 +230,7 @@ const Post = ({data, showButtons}) => {
             // setCount((count) => count + 1);
             setPostID(postData.postId);
             //   console.log("post ID: " + postID);
-            modelNameRef.current.innerHTML = postData.modelName;
+            modelNameRef.current.innerText = postData.modelName;
             setModelName(postData.modelName);
             profilePicRef.current.src = postData.modelProfileImg;
             setModelProfilePic(postData.modelProfileImg);
@@ -314,14 +314,14 @@ const Post = ({data, showButtons}) => {
                         </div>
                         }
                     </div>
-                    <div style={{ margin: "auto", padding: 3, display: "flex" }}>
+                    <div style={{ margin: "auto", padding: 3, display: "flex", hieght:300 }}>
                         <canvas
                             ref={imageCanvasRef}
-                            //   width={150}
-                            hieght={600}
+                            width={300}
+                            height="300"
                             style={{
-                                width: "300px",
-                                hieght: "300px",
+                                // width: "100%",
+                                // hieght: "100%",
                                 borderRadius: 5,
                                 background: "lightgrey",
                                 margin: "auto",
