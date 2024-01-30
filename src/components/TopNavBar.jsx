@@ -26,7 +26,7 @@ const TopNavBar = () => {
 
   function logoutUser() {
     // localStorage.setItem("currentUser", {logged:"out"})
-    localStorage.setItem("currentUser", `{logged:"out"}`);
+    localStorage.setItem("currentUser", `{"logged":"out"}`);
     navigate("/login");
     console.log("hit")
   }

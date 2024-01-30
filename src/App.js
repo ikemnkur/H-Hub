@@ -17,7 +17,21 @@ function App() {
 
   // const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  
+  const [currentUser, setCurrentUser] = useState();
+  useEffect(() => {
+     try {
+       setCurrentUser(JSON.parse(localStorage.getItem("currentUser")))
+     } catch (error) {
+       localStorage.setItem("currentUser", `{"logged":"out"}`);
+     }
+  
+    return () => {
+    }
+  }, [])
+  
+ 
+  
 
   // useEffect(() => {
   //   const temp = localStorage.getItem("currentUser")

@@ -18,12 +18,16 @@ import { ChatContext } from "../context/ChatContext";
 import { FaSearch } from "react-icons/fa";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 
+import { v4 as uuid } from "uuid";
 
 
 const ChatPage = () => {
   const { data } = useContext(ChatContext);
-  
 
+  const queryParameters = new URLSearchParams(window.location.search)
+  
+  let modelName = queryParameters.get("model")
+  
   //Nav Bar Logic
   const [coins, setCoins] = useState(0);
   const [viewChat, setViewChat] = useState(false);
@@ -41,7 +45,6 @@ const ChatPage = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [newChat, setNewChat] = useState(null);
 
-  const queryParameters = new URLSearchParams(window.location.search)
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   function openChats() {
@@ -63,31 +66,55 @@ const ChatPage = () => {
     setChatMode("all")
   }
 
+  var currentdate = new Date(); 
+  var datetime = "Sent: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + (currentdate.getMinutes()) > 9? "0" : "" + currentdate.getMinutes() + ":" 
+                + (currentdate.getSeconds()) > 9? "0" : "" + currentdate.getSeconds();
+
   async function getAChat() {
     console.log("Model:" + queryParameters.get("model"));
     // const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}`);
     const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}&userid=${currentUser.id}`);
-    const chat = response.data;
-    console.log("Get A Chat: ", chat)
-    setCurrentChat(chat)
-    setChatMode("one")
-    // chat.forEach(object => {
-    //   // do your filtering here and array push here
-    //   if (object.userid === currentUser.id) {
-    //     console.log("Get A Chat: ", chat)
-    //     setCurrentChat(chat)
-    //     setChatMode("one")
-    //   }
-
-    // });
-
+    let chat = response.data;
+    if (chat.messages === ""){
+      chat = 
+        {
+          "id": "CHAT"+uuid(),
+          "modelName": modelName,
+          "userid": currentUser.id,
+          "modelProfileImg": "https://www.elmueble.com/medio/2022/02/11/aranzazu-diaz-huerta_203d6a05_120x120.jpg",
+          "messages": [
+            {
+              "msgId": "MSG"+uuid(),
+              "from": modelName,
+              "to": currentUser.username,
+              "datetime": new Date(),
+              "messageText": "Hey thanks for chatting with me, I will reply to any messages soon.",
+              "reaction": "like"
+            },
+          ]
+        }
+      
+      console.log(`Creating New A Chat with ${modelName}: `, chat);
+      console.log(`Getting Chat with ${modelName}: `, chat)
+      setCurrentChat(chat)
+      setChatMode("one") 
+    } else {
+      console.log(`Getting Chat with ${modelName}: `, chat)
+      setCurrentChat(chat)
+      setChatMode("one") 
+    }
+    
   }
 
 
 
   useEffect(() => {
     if (chatMode === "all")
-      getAllChats();
+      getAllChats(); // delete all related code later
     else
       getAChat();
   }, []);

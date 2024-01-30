@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import Message from "./Message";
 
 const Messages = ({data}) => {
+  
   // const [messages, setMessages] = useState([]);
   // const { data } = useContext(ChatContext);
 
@@ -20,7 +21,7 @@ const Messages = ({data}) => {
 
   // console.log(messages)
 
-  const [messages, setMessages] = useState(data.messages);
+  const [messages, setMessages] = useState(data[0].messages);
   // const { data } = useContext(ChatContext);
 
   // useEffect(() => {
@@ -32,8 +33,8 @@ const Messages = ({data}) => {
   //     unSub();
   //   };
   // }, [data.chatId]);
-  console.log("Data:", data)
-  console.log("Message: (From: "+data.from+", To: "+data.to+")")
+  console.log("Data:", data[0])
+  console.log("Message: (From: "+data[0].from+", To: "+data[0].to+")")
   console.log(messages)
 
   return (

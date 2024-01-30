@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 // import { signInWithEmailAndPassword } from "firebase/auth";
 // import { auth } from "../firebase";
 import axios from "axios";
+import { BiBorderRadius } from "react-icons/bi";
 
 const Login = () => {
   const [err, setErr] = useState(false);
@@ -34,6 +35,11 @@ const Login = () => {
 
   const passwordField =  useRef(null);
   const showButton =  useRef(null);
+
+  const queryParameters = new URLSearchParams(window.location.search)
+  let modelName = queryParameters.get("model")
+
+  localStorage.setItem("currentUser", `{"logged":"out"}`);
 
   // useEffect(() => {
   //   const temp = localStorage.getItem("currentUser")
@@ -82,17 +88,40 @@ const Login = () => {
 
         if (email.includes("@")) {
           // localStorage.setItem("currentUser", emailuser);
-          setCurrentUser(userByEmail);  
-          localStorage.setItem("currentUser", JSON.stringify(userByEmail)); 
-          console.log("logging in by email: " + userByEmail.username);
-          console.log("logging in: " + currentUser.username);
+          const firstFunction = async() => {
+            setCurrentUser(userByEmail);  
+            localStorage.setItem("currentUser", JSON.stringify(userByEmail));
+            return 1;
+          }
+
+          const secondFunction = async() => {
+            const result = await firstFunction();
+            console.log("logging in by email: " + userByEmail.username);
+            console.log("logging in: " + currentUser.username);
+          } 
+
+          // setCurrentUser(userByEmail);  
+          // localStorage.setItem("currentUser", JSON.stringify(userByEmail)); 
+          
           
         } else {
           // localStorage.setItem("currentUser", user);
-          setCurrentUser(userByUsername);
-          localStorage.setItem("currentUser", JSON.stringify(userByUsername)); 
-          console.log("logging in: " + currentUser.username);
-          console.log("logging in by username: " + userByUsername.username);
+
+          const firstFunction = async() => {
+            setCurrentUser(userByUsername);
+            localStorage.setItem("currentUser", JSON.stringify(userByUsername)); 
+            return 1;
+          }
+
+          const secondFunction = async() => {
+            const result = await firstFunction();
+            console.log("logging in: " + currentUser.username);
+            console.log("logging in by username: " + userByUsername.username);
+          } 
+
+
+         
+         
           
         }
         
@@ -123,11 +152,22 @@ const Login = () => {
       
   } 
 
+  let imgSrc = `http://localhost:5000/images/modelPP/${modelName}.jpg`
+
   return (
     <div className="formContainer">
-      <div className="formWrapper">
-        <span className="logo">Talk to Pamme</span>
-      </div> <br></br>
+      {
+        modelName &&
+        <div style={{padding: "20px 0px"}}>
+            <div className="formWrapper" style={{}}>
+              <span className="logo">Checkout {modelName}!!!</span>
+              <img src={imgSrc} alt="" style={{ border: "3px solid black", height: 100, borderRadius: 100 }} />
+              <span>Login to see more of {modelName}.</span>
+            </div>
+        </div>
+        
+      }
+       <br></br>
       <div className="formWrapper">
         <span className="logo">H-Hub</span>
         <span className="title">Login</span>
