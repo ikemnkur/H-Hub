@@ -145,7 +145,7 @@ const AccountSettings = () => {
           {modelData !== null && 
           <> 
           <div style={{ display: "flex", gap: 10 }}>
-            <img style={{width: 120}} src={modelData.modelProfileImg} alt="" />
+            <img style={{width: 120, borderRadius: 100}} src={modelData.modelProfileImg} alt="" />
             <h1 style={{ marginTop: "auto",}}> {modelName}
               <div style={{ display: "flex", gap: 10, paddingTop: 5 }} >
                 {/* <b>Coins: </b> <span style={{margin: 5}}> 5 </span> */}
@@ -161,7 +161,7 @@ const AccountSettings = () => {
 
             <div>
 
-              <div style={{ width: "90%", height: 100, margin: "auto", overflowY: "scroll", backgroundColor: "lightgray", borderRadius: 5 }}>
+              <div style={{ width: "100%", height: 100, margin: "auto", overflowY: "scroll", backgroundColor: "lightgray", borderRadius: 5 }}>
                 <b style={{ padding: 0, margin: 5 }}>Bio:</b>
                 <p style={{ paddingLeft: 5, marginLeft: 5 }}>{modelData.bio}</p>
               </div>

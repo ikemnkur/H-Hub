@@ -57,6 +57,7 @@ const CommentModal = ({ setIsOpenAddCommentModal, modelName, postData }) => {
     // getPost
     console.log("New Comment: ", newUserComment)
     handlePostUpdate(id, newUserComment);
+    setIsOpenAddCommentModal(false)
   }
 
   // function toggleIsOpen(){

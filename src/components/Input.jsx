@@ -38,7 +38,7 @@ Input = ({data, setNewChat}) => {
   //         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
   //           await updateDoc(doc(db, "chats", data.chatId), {
   //             messages: arrayUnion({
-  //               id: uuid(),
+  //               id:   (),
   //               text,
   //               senderId: currentUser.uid,
   //               date: Timestamp.now(),
@@ -78,6 +78,15 @@ Input = ({data, setNewChat}) => {
   //   setImg(null);
   // };
 
+  console.log("Data: ", data);
+
+  var currentdate = new Date(); 
+  var datetime = "Last Sync: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
 
   const handleAttachment = async() => {
     
@@ -86,14 +95,19 @@ Input = ({data, setNewChat}) => {
   const handleSend = async () => {
     let tempChat = data; //data is the whole chat history
     //store at the end of the msg array
-    tempChat.messages[data.messages.length] = {
-      datetime: "01/25/24",
+    var currentdate = new Date(); 
+    
+    let newChat = {
+      datetime: currentdate,
       messageText: text,
-      msgId: "12321",
-      reaction: "like",
-      from: data.username
+      msgId: uuid(),
+      reaction: "",
+      from: data[0].username
       // Attach file/img adding to the chat
     };
+
+    tempChat.messages[data[0].messages.length-1] = newChat;
+
     setNewChat(tempChat) //send it to the newChat variable in the ChatPage.jsx file
     console.log("New Chat: ", tempChat)
   }

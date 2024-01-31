@@ -17,7 +17,7 @@
       "id": 2,
       "postId": "543b6546354vc63",
       "modelName": "Sally",
-      "modelProfileImg": "https://media.gettyimages.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=gi&k=20&c=tFkDOWmEyqXQmUHNxkuR5TsmRVLi5VZXYm3mVsjee0E=",
+      "modelProfileImg": "`http://localhost:5000/images/modelPP/Sally.jpg`",
       "mediaUrl": "https://www.elmueble.com/medio/2023/03/09/perro-de-raza-rottweiler_9f7a22a7_230309180127_900x900.jpg",
       "caption": "ABC text default description",
       "title": "Candy",
@@ -137,6 +137,20 @@
       "text": "dsdsvbsdv",
       "likes": 0,
       "postId": 4
+    },
+    {
+      "id": "1db7cd6e-4e54-4961-800b-c776df1c3a22",
+      "username": "testuser",
+      "text": "sup boys\n",
+      "likes": 0,
+      "postId": 1
+    },
+    {
+      "id": "63bcde0e-da93-4a96-98f0-ae8603c85451",
+      "username": "test",
+      "text": "hey",
+      "likes": 0,
+      "postId": 4
     }
   ],
   "tips": [
@@ -186,7 +200,7 @@
   "models": [
     {
       "name": "Sally",
-      "modelProfileImg": "https://media.gettyimages.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=gi&k=20&c=tFkDOWmEyqXQmUHNxkuR5TsmRVLi5VZXYm3mVsjee0E=",
+      "modelProfileImg": "http://localhost:5000/images/modelPP/Sally.jpg",
       "post": {
         "1": "1",
         "2": "2"
@@ -197,7 +211,7 @@
     },
     {
       "name": "Pammy",
-      "modelProfileImg": "https://www.elmueble.com/medio/2022/02/11/aranzazu-diaz-huerta_203d6a05_120x120.jpg",
+      "modelProfileImg": "http://localhost:5000/images/modelPP/Pamme.jpg",
       "post": {
         "3": "3",
         "4": "4"
