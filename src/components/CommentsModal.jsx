@@ -1,6 +1,6 @@
 // @src/components/Modal.jsx
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./Modal.module.css";
 import { RiCloseLine } from "react-icons/ri";
 import { BiCommentAdd } from "react-icons/bi";
@@ -21,8 +21,8 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
    
   const handlePostUpdate = async (id, updatedComment) => {
     try {
-        // console.log("PD: ", postData)
-        const response = await axios.put(`http://localhost:4000/comments?id=${id}`, updatedComment);
+        // console.log("PD: ", postData) users/${currentUser.id}
+        const response = await axios.put(`http://localhost:4000/comments/${id}`, updatedComment);
         console.log('Item updated:', response.data);
     } catch (error) {
         console.error('Error updating item:', error);
@@ -46,13 +46,13 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
 
   function likeCommentAction(id) {
     let num = id.replace("comment#", "");
-    let idNum = parseInt(num);
-    const comment = getCommentById(idNum)[0];
+    // let idNum = parseInt(num);
+    const comment = getCommentById(num)[0];
     console.log("like comment: ", comment);
     let updatedComment = comment;
-    console.log("CI: ", commentIndex-1)
-    updatedComment[commentIndex-1].likes = comment[commentIndex-1].likes+1;
-    handlePostUpdate(idNum, updatedComment);
+    console.log("CI: ", commentIndex)
+    updatedComment.likes = comment.likes+1;
+    handlePostUpdate(num, updatedComment);
     try {
       if (parseInt(document.getElementById(id).innerText) < parseInt(comment.likes))
         document.getElementById(id).innerText = parseInt(comment.likes)
@@ -69,7 +69,10 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
       function (postComments) { 
         // console.log("idNum: ", idNum)
         i++;
-        commentIndex = i
+        
+        if (postComments.id === idNum ){
+          commentIndex = i
+        }
         return postComments.id === idNum 
       }
     );
@@ -77,14 +80,18 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
 
   function dislikeCommentAction(id) {
     let num = id.replace("comment#", "");
-    let idNum = parseInt(num)
-    let comment = getCommentById(idNum)[0]
-    console.log("dislike comment: ", comment)
+    // let idNum = parseInt(num);
+    const comment = getCommentById(num)[0];
+    console.log("dislike comment: ", comment);
+    let updatedComment = comment;
+    console.log("CI: ", commentIndex)
+    updatedComment.likes = comment.likes-1;
+    handlePostUpdate(num, updatedComment);
     try {
-      if (parseInt(document.getElementById(id).innerText) > parseInt(comment.likes))
-        document.getElementById(id).innerText = parseInt(comment.likes)
+      if (parseInt(document.getElementById(id).innerText) < parseInt(comment.likes))
+        document.getElementById(id).innerText = parseInt(comment.likes);
       else
-        document.getElementById(id).innerText = parseInt(comment.likes) - 1
+        document.getElementById(id).innerText = parseInt(comment.likes) - 1;
     } catch (error) {
       console.log("dislike task failed")
     }
@@ -97,6 +104,22 @@ const CommentModal = ({ setIsOpen, postComments, modelName, postData }) => {
   const upvoteRef = useRef(null);
 
   let commentsArray;
+
+  async function getComments(){
+    const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+    console.log("Post Comments Data: ", response.data);
+    const data = response.data;
+    commentsArray = data;
+  }
+
+  useEffect(() => {
+    getComments();
+    
+    return () => {
+      
+    }
+  }, [addCommentModal])
+  
 
   return (
     <>

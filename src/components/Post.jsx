@@ -84,13 +84,14 @@ const Post = ({data, showButtons}) => {
     }
     // let numofComments = 0;
     let commentsArray;
+
     async function getComments() {
         try{
             console.log("post id: ", postData.id)
             const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
             console.log("Post Comments Data: ", response.data);
             const data = response.data
-            console.log("Post Comments Data: ", data)
+            // console.log("Post Comments Data: ", data)
             setnumofComments(data.length);
             console.log("number of comments: ", numofComments);
             setPostComments(data)

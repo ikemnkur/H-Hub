@@ -1,82 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import Img from "../img/img.png";
 import Attach from "../img/attach.png";
-import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
-import {
-  arrayUnion,
-  doc,
-  serverTimestamp,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { db, storage } from "../firebase";
 import { v4 as uuid } from "uuid";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+
 
 const 
 Input = ({data, setNewChat}) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-  // const [newChat, setNewChat] = useState(null);
-
- 
-  // const { data } = useContext(ChatContext);
-
-  // const handleSend = async () => {
-  //   if (img) {
-  //     const storageRef = ref(storage, uuid());
-
-  //     const uploadTask = uploadBytesResumable(storageRef, img);
-
-  //     uploadTask.on(
-  //       (error) => {
-  //         //TODO:Handle Error
-  //       },
-  //       //Send Image
-  //       () => {
-  //         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-  //           await updateDoc(doc(db, "chats", data.chatId), {
-  //             messages: arrayUnion({
-  //               id:   (),
-  //               text,
-  //               senderId: currentUser.uid,
-  //               date: Timestamp.now(),
-  //               img: downloadURL,
-  //             }),
-  //           });
-  //         });
-  //       }
-  //     );
-  //   } else {
-  //     // Send only text
-  //     await updateDoc(doc(db, "chats", data.chatId), {
-  //       messages: arrayUnion({
-  //         id: uuid(),
-  //         text,
-  //         senderId: currentUser.uid,
-  //         date: Timestamp.now(),
-  //       }),
-  //     });
-  //   }
-
-  //   await updateDoc(doc(db, "userChats", currentUser.uid), {
-  //     [data.chatId + ".lastMessage"]: {
-  //       text,
-  //     },
-  //     [data.chatId + ".date"]: serverTimestamp(),
-  //   });
-
-  //   await updateDoc(doc(db, "userChats", data.user.uid), {
-  //     [data.chatId + ".lastMessage"]: {
-  //       text,
-  //     },
-  //     [data.chatId + ".date"]: serverTimestamp(),
-  //   });
-
-  //   setText("");
-  //   setImg(null);
-  // };
+  const inputBoxRef = useRef(null);
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   console.log("Data: ", data);
 
@@ -97,28 +30,43 @@ Input = ({data, setNewChat}) => {
     //store at the end of the msg array
     var currentdate = new Date(); 
     
+    let text = inputBoxRef.current.value;
+
     let newChat = {
       datetime: currentdate,
       messageText: text,
       msgId: uuid(),
       reaction: "",
-      from: data[0].username
+      from: currentUser.username
+      
       // Attach file/img adding to the chat
     };
-
-    tempChat.messages[data[0].messages.length-1] = newChat;
+    tempChat.messages[data.messages.length] = newChat
+    // tempChat.messages[data.messages.length-1] = newChat;
 
     setNewChat(tempChat) //send it to the newChat variable in the ChatPage.jsx file
     console.log("New Chat: ", tempChat)
+    setTimeout(()=>{
+      inputBoxRef.current.value = "";
+    }, 500)
+    
   }
+
+  // useEffect(() => {
+    
+  //   console.log("Input Text: ", text)
+    
+  // }, [text])
+  
 
   return (
     <div className="input">
       <input
         type="text"
         placeholder="Type something..."
-        onChange={(e) => setText(e.target.value)}
-        value={text}
+        // onChange={(e) => setText(e.target.value)}
+        // value={text}
+        ref={inputBoxRef}
       />
       <div className="send">
         <img src={Attach} alt="" />

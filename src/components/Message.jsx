@@ -13,6 +13,31 @@ const Message = ({ message, data }) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
+  var currentdate = new Date();
+  var msgdate = new Date(message.datetime);
+
+  var datetime;
+  var Difference_In_Time = currentdate.getTime() - msgdate.getTime();
+  var diffInDays = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+  if (diffInDays > 0) {
+    datetime = msgdate.getDate() + "/"
+      + (msgdate.getMonth() + 1) + "/"
+      + msgdate.getFullYear()
+  } else {
+    datetime =
+      ((msgdate.getHours() < 10) ? "0" : "") + msgdate.getHours() + ":"
+      + ((msgdate.getMinutes() < 10) ? "0" : "") + msgdate.getMinutes() + ":"
+      + ((msgdate.getSeconds() < 10) ? "0" : "") + msgdate.getSeconds();
+  }
+
+  // datetime = msgdate.getDate() + "/"
+  //           + (msgdate.getMonth()+1)  + "/" 
+  //           + msgdate.getFullYear() + " @ "  
+  //           + ((msgdate.getHours() < 10) ? "0" : "")  + msgdate.getHours()+ ":"  
+  //           + ((msgdate.getMinutes() < 10) ? "0" : "") + msgdate.getMinutes() + ":" 
+  //           + ((msgdate.getSeconds() < 10) ? "0" : "") + msgdate.getSeconds();
+
   return (
     <div
       ref={ref}
@@ -33,7 +58,7 @@ const Message = ({ message, data }) => {
         <p>{message.messageText}</p>
         {message.img && <img src={message.img} alt="" />}
         {/* <div> */}
-          <span style={{fontSize: 10}}>TIme: {message.datetime}</span>
+          <span style={{fontSize: 10}}>{(diffInDays > 0)? "Date:": "Today:"} {datetime}</span>
         {/* </div> */}
       </div>
       

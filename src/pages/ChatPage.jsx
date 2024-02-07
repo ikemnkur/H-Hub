@@ -1,5 +1,5 @@
 // import React from "react";
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef, useLayoutEffect} from "react";
 
 import axios from "axios";
 
@@ -11,6 +11,7 @@ import More from "../img/more.png";
 
 import Messages from "../components/Messages";
 import Input from "../components/Input";
+import Message from "../components/Message";
 
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
@@ -22,7 +23,7 @@ import { v4 as uuid } from "uuid";
 
 
 const ChatPage = () => {
-  const { data } = useContext(ChatContext);
+  // const { data } = useContext(ChatContext);
 
   const queryParameters = new URLSearchParams(window.location.search)
   
@@ -37,6 +38,26 @@ const ChatPage = () => {
   const chatsList = useRef(null);
   const chatPane = useRef(null);
 
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  const newChatTemplate = 
+  {
+    id: "CHAT"+uuid(),
+    modelName: modelName,
+    userid: currentUser.id,
+    modelProfileImg: `http://localhost:5000/images/modelPP/${modelName}.jpg`,
+    messages: [
+      {
+        "msgId": "MSG"+uuid(),
+        "from": modelName,
+        "to": currentUser.username,
+        "datetime": new Date(),
+        "messageText": "Hey thanks for chatting with me, I will reply to any messages soon.",
+        "reaction": "like"
+      },
+    ]
+  }
+
   //  Search Bar Code
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
@@ -45,8 +66,7 @@ const ChatPage = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [newChat, setNewChat] = useState(null);
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
+  
   function openChats() {
     setViewChat(!viewChat);
     console.log("closeChats");
@@ -55,8 +75,6 @@ const ChatPage = () => {
     chatsList.current.style.display = "none";
     
   }
-
-
 
   async function getAllChats() {
     const response = await axios.get(`http://localhost:4000/chats}`);
@@ -74,42 +92,56 @@ const ChatPage = () => {
                 + (currentdate.getMinutes()) > 9? "0" : "" + currentdate.getMinutes() + ":" 
                 + (currentdate.getSeconds()) > 9? "0" : "" + currentdate.getSeconds();
 
+
   async function getAChat() {
     console.log("Model:" + queryParameters.get("model"));
     // const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}`);
     const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}&userid=${currentUser.id}`);
-    let chat = response.data;
+    let chat = response.data[0];
+    // console.log("Retrieved Chat: ", chat)
     if (chat.messages === ""){
-      chat = 
-        {
-          "id": "CHAT"+uuid(),
-          "modelName": modelName,
-          "userid": currentUser.id,
-          "modelProfileImg": "https://www.elmueble.com/medio/2022/02/11/aranzazu-diaz-huerta_203d6a05_120x120.jpg",
-          "messages": [
-            {
-              "msgId": "MSG"+uuid(),
-              "from": modelName,
-              "to": currentUser.username,
-              "datetime": new Date(),
-              "messageText": "Hey thanks for chatting with me, I will reply to any messages soon.",
-              "reaction": "like"
-            },
-          ]
-        }
-      
-      console.log(`Creating New A Chat with ${modelName}: `, chat);
-      console.log(`Getting Chat with ${modelName}: `, chat)
-      setCurrentChat(chat)
-      setChatMode("one") 
+      //If no messages exist yet
+      console.log(`Creating New A Chat with ${modelName}: `, newChatTemplate);
     } else {
       console.log(`Getting Chat with ${modelName}: `, chat)
-      setCurrentChat(chat)
-      setChatMode("one") 
     }
-    
+    setCurrentChat(chat)
+    setChatMode("one") 
   }
 
+  // getAChat()
+
+  
+  async function sendChat() {
+    try {
+      console.log("Current Chat ID: ", currentChat.id)
+      console.log("Model Pic URL: ", currentChat.modelProfileImg)
+      const response = await axios.put(`http://localhost:4000/chats/${currentChat.id}`, newChat);
+      console.log('Item updated:', response.data);
+      setCurrentChat(newChat)
+    } catch (error) {
+      console.error('Error updating item:', error);
+    }
+    console.log("Updated Current Chat: ", currentChat);
+    // localStorage.setItem("currentChat", JSON.stringify(currentChat))
+  }
+
+
+  // Update current Chat in localstorage
+  useEffect(() => {
+    // getAChat();
+    localStorage.setItem("currentChat", JSON.stringify(currentChat))
+  }, [currentChat]);
+  
+
+  //Updated chat page when new chat is sent
+  useEffect(() => {
+    if (newChat !== null) {
+      setCurrentChat(newChat)
+      sendChat() 
+      // localStorage.setItem("currentChat", JSON.stringify(currentChat))
+    }
+  }, [newChat]);
 
 
   useEffect(() => {
@@ -117,30 +149,31 @@ const ChatPage = () => {
       getAllChats(); // delete all related code later
     else
       getAChat();
+
+    // setInterval(() => {
+    //   // if (newChat !== currentChat){
+    //     console.log("re-render: 2")
+    //     if (chatMode === "all")
+    //       getAllChats(); // delete all related code later
+    //     else
+    //       getAChat();
+    //   // }
+      
+    // }, 15000);
   }, []);
 
+  // setInterval(() => {
+  //     console.log("re-render: 1")
+  // }, 5000);
 
 
-  async function sendChat() {
-    setCurrentChat(newChat)
-    try {
-      const response = await axios.put(`http://localhost:4000/chats/${currentChat.id}`, newChat);
-      console.log('Item updated:', response.data);
-      // setCurrentChat(null)
-    } catch (error) {
-      console.error('Error updating item:', error);
-      setCurrentChat(null)
-    }
-    console.log("Updated Current Chat: ", currentChat)
-  }
-
-  useEffect(() => {
-    if(currentChat!== null || newChat !== null){
-      console.log("Current Chat: ", currentChat)
-      // sendChat()
-    }
-    // getAChat();
-  }, [newChat]);
+  // useEffect(() => {
+  //   if(currentChat!== null || newChat !== null){
+  //     console.log("Current Chat: ", currentChat[0])
+  //     // sendChat()
+  //   }
+  //   // getAChat();
+  // }, [newChat]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -191,16 +224,7 @@ const ChatPage = () => {
       <TopNavBar />
 
       <div style={{ padding: 10, backgroundColor: "#a7bcff" }}>
-        <div
-          style={{
-            height: 150,
-            width: "90%",
-            margin: "auto",
-            padding: 10,
-            borderRadius: 10,
-            backgroundColor: "#eeeeff",
-          }}
-        >
+        <div style={{height: 150,width: "90%",margin: "auto",padding: 10,borderRadius: 10,backgroundColor: "#eeeeff",}}>
           Ad
         </div>
       </div>
@@ -217,8 +241,7 @@ const ChatPage = () => {
                 style={{ float: "right", marginLeft: "auto" }}
                 onClick={()=>{openChats()}}
               >
-                {" "}
-                {">>>"}{" "}
+                {" "}{">>>"}{" "}
               </button>
             </div>
           </div>
@@ -229,11 +252,7 @@ const ChatPage = () => {
           <div className="search">
               <div className="searchForm" style={{padding: 3, display: "flex", backgroundColor: "#8e82bd"}}>
                 <FaSearch style={{margin: "auto", fontSize: 24, color: "white"}}/>
-                <input
-                  type="text"
-                  placeholder="Find a user"
-                  onKeyDown={handleKey}
-                  onChange={(e) => setUsername(e.target.value)}
+                <input type="text" placeholder="Find a user" onKeyDown={handleKey} onChange={(e) => setUsername(e.target.value)}
                   value={username}
                   style={{padding: 5, margin: "5px 5px 5px 5px", width: "90%"}}
                 />
@@ -253,9 +272,6 @@ const ChatPage = () => {
 
           {/* <ChatsList /> */}
           <div className="chats" style={{backgroundColor: "#8e82ad"}} ref={chatsList}>
-
-          
-
             {allChats !== null && allChats.map((chat) => {
                 return(
                   <div key={chat.id} className="userChat" onClick={() => handleSelect(chat.modelName)} style={{display: 'flex', padding: 3}}>
@@ -267,18 +283,16 @@ const ChatPage = () => {
                 </div>
                 )
               }
-            )}
-
-           
+            )}        
           </div>
 
 
-          {/* <Chat ref={chatPane}/> */}
+          {/* Chat with model */}
           { currentChat !== null &&
             <div className="chat" style={{height: 512}} ref={chatPane}>
               <div className="chatInfo">
                 <img src={currentChat.modelProfileImg} alt="" style={{width: 60, height: 60, borderRadius: 80, marginRight: 15}} />
-                <h3 style={{marginRight: "auto", }}>{currentChat.modelName}</h3>
+                <h3 style={{marginRight: "auto" }}>{currentChat.modelName}</h3>
                 {
                   chatMode === "all" &&
                   <div className="chatIcons">
@@ -287,8 +301,18 @@ const ChatPage = () => {
                 }
                 
               </div>
-              <Messages data={currentChat}/>
-              <Input data={currentChat} setNewChat={setNewChat}/>
+              {/* {currentChat && */}
+                <>
+                  {/* <Messages data={currentChat} /> */}
+                  <div className="messages">
+                    {currentChat.messages.map((m) => (
+                      <Message message={m} key={uuid()} data={currentChat} />
+                    ))}
+                  </div>
+                  <Input data={currentChat} setNewChat={setNewChat} />
+                </>
+              {/* } */}
+              
             </div>
           }
           

@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { ChatContext } from "../context/ChatContext";
-import { db } from "../firebase";
+// import { ChatContext } from "../context/ChatContext";
+// import { db } from "../firebase";
 import Message from "./Message";
 
 const Messages = ({data}) => {
@@ -20,8 +20,19 @@ const Messages = ({data}) => {
   // }, [data.chatId]);
 
   // console.log(messages)
+  console.log("Msg Comp. Data: ", data)
 
-  const [messages, setMessages] = useState(data[0].messages);
+  const [messages, setMessages] = useState(data.messages);
+
+  useEffect(() => {
+    setInterval(() => {
+       setMessages(data.messages)
+    }, 1000);
+   
+  }, [messages])
+  
+
+  
   // const { data } = useContext(ChatContext);
 
   // useEffect(() => {
@@ -33,9 +44,14 @@ const Messages = ({data}) => {
   //     unSub();
   //   };
   // }, [data.chatId]);
-  console.log("Data:", data[0])
-  console.log("Message: (From: "+data[0].from+", To: "+data[0].to+")")
-  console.log(messages)
+  // console.log("Data:", data)
+  // console.log("Messages:",messages)
+
+  //  //Updated chat page when new chat is sent
+  //  useEffect(() => {
+  //   setCurrentChat(newChat)
+  //   sendChat()
+  // }, [newChat]);
 
   return (
     <div className="messages">
