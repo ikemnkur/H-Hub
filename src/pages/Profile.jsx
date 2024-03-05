@@ -1,19 +1,12 @@
 // import React from "react";
-import React, { useContext, useState, useEffect, useRef} from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { confirmPasswordReset, signOut } from "firebase/auth";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db, storage } from "../firebase";
-import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc, setDoc} from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-// import { doc, setDoc } from "firebase/firestore";
-// import { useNavigate, Link } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
 import TopNavBar from "../components/TopNavBar";
 
-import { AuthContext } from "../context/AuthContext";
+import GetMoreCoinsModal from "../components/GetMoreCoinsModal";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import ImageCanvas from "../components/ImageUploadPreview";
 
@@ -28,94 +21,103 @@ const AccountSettings = () => {
   const [uploading, setUploading] = useState(false);
   const [userStatus, setUserStatus] = useState(false);
   const [ppImage, setPPImage] = useState(null);
-  const { v4 : uuid } = require("uuid");
+  const { v4: uuid } = require("uuid");
 
-  const usernameRef = useRef(null)
-  const passwordRef = useRef(null)
-  const confirmPasswordRef = useRef(null)
+  const [isOpenCoinModal, setisOpenCoinModal] = useState(false);
+
+  const usernameRef = useRef()
+  const passwordRef = useRef()
+  const confirmPasswordRef = useRef()
+  const subscribeInputRef = useRef()
+  const followInputRef = useRef()
+  const coinsRef = useRef()
+
+  const [searchedModels, setSearchedModels] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [followModel, setFollowModel] = useState(null);
+  // const [models, setModels] = 
+  let models = JSON.parse(localStorage.getItem("Models"));
 
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("")
 
-  // try {
+  
+  async function getCurrentUserData() {
     setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  // } catch (error) {
-    // console.log("Error Loggin out")
-    // let newUser = {
-    //   id: 1,
-    //   username: "billy",
-    //   password: "Password",
-    //   email: "billy@gmail.com",
-    //   date: "",
-    //   joinDate: "",
-    //   profileUrl: "http://localhost:5000/images/defaultpp.png",
-    //   coins: 10,
-    //   unlockedPost: "",
-    //   following: "",
-    //   subscriptions: ""
-    // }
-    // setCurrentUser(newUser)
-    // navigate("/login")
-  // }
-  
-  // const handleEmailChange = (e) => {
-  //     setEmail(e.target.value);
-  // };
+    console.log(currentUser.id)
+    const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
+    const data = response.data[0];
+    console.log("Current User Data: ", response)
+    setCurrentUser(data)
 
-  // const handleUsernameChange = (e) => {
-  //     setUsername(e.target.value);
-  // };
+  }
 
-  // const handlePasswordChange = (e) => {
-  //     setPassword(e.target.value);
-  // };
+  useEffect(() => {
 
-  // const handleProfilePicChange = (e) => {
-  //     setProfilePic(e.target.files[0]);
-  //     console.log(e.target.files[0]);
-  // };
+    getCurrentUserData()
 
-  // function handleUpdateAccount(e) {
+    try {
+      // setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+      setUsername(currentUser.username);
+      usernameRef.current.value = currentUser.username
+      setCPassword(currentUser.password);
+      setPassword(currentUser.password);
+      setSearchedModels(models)
+    } catch {
+      // log out user if cant get user data
+      console.log("Error: Can verify Login Status")
+      let newUser = {
+        id: 1,
+        username: "billy",
+        password: "Password",
+        email: "billy@gmail.com",
+        date: "",
+        joinDate: "",
+        profileUrl: "http://localhost:5000/images/defaultpp.png",
+        coins: 10,
+        unlockedPost: "",
+        following: "",
+        subscriptions: ""
+      }
+      setCurrentUser(newUser)
+      navigate("/login")
+    }
+  }, [])
 
-  // }
 
-  // useEffect(() => {
-
-  //   const handleLogin = async () => {
-  //     try {
-  //         const response = await axios.get(`http://localhost:3000/users`);
-  //         const users = response.data;
-
-  //         const user = users.find(u => u.email === email && u.password === password);
-
-  //         if (user) {
-  //             setUserStatus('User Data Retrival successful!');
-  //             // Perform further actions here like redirecting to another page or storing user details in context/state
-  //         } else {
-  //             setUserStatus('Invalid User Credentials');
-  //         }
-  //     } catch (error) {
-  //         console.error('Error fetching users:', error);
-  //         setUserStatus('Login failed. Please try again later.');
-  //     }
-  //   };
-  
-  // }, [])
-  
 
   const handleSubmit = async (e) => {
 
-      e.preventDefault();
+    e.preventDefault();
 
-      setUsername(usernameRef.current.value)
-      setPassword(passwordRef.current.value) 
-      setCPassword(confirmPasswordRef.current.value)
-      
-      handleUpdateAccount()
+    setUsername(usernameRef.current.value)
+    setPassword(passwordRef.current.value)
+    setCPassword(confirmPasswordRef.current.value)
+
+    handleUpdateAccount()
+
   };
 
-  async function handleUpdateAccount(){
-    // e.preventDefault();
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (currentUser && usernameRef.current) {
+        setUsername(currentUser.username);
+        console.log("Username Ref: ", usernameRef.current.value);
+        usernameRef.current.value = currentUser.username;
+        setCPassword(currentUser.password);
+        setPassword(currentUser.password);
+      } else {
+        console.log("Ref is not attached or currentUser is not available");
+      }
+    }, 500);
+    // Removed array around 500, it's the delay argument for setTimeout
+
+  }, [currentUser]); // Added currentUser as a dependency
+
+
+  async function handleUpdateAccount() {
+
     let newUser = {
       id: 1,
       username: "billy",
@@ -130,46 +132,102 @@ const AccountSettings = () => {
       subscriptions: ""
     }
 
-    setUsername(usernameRef.current.value)
-    setPassword(passwordRef.current.value) 
-    setCPassword(confirmPasswordRef.current.value)
+    setUsername(usernameRef.current.value);
+    if (passwordRef.current.value === "") {
+
+    } else {
+      setPassword(passwordRef.current.value);
+      setCPassword(confirmPasswordRef.current.value);
+    }
+
+
+    console.log("Debug: ", username);
+
+    if (cpassword !== password) {
+      alert("Error: Passwords do not match");
+      return;
+    }
+
+    let usernameStr = username
+
+
+    if (usernameStr.length < 5) {
+      let errortext = "Error: Username is too short. Length: " + usernameStr.length;
+      alert(errortext);
+      return;
+    }
+
+    let passwordLen = cpassword;
+
+    if (passwordLen.length < 8 && passwordRef.current.value !== "") {
+      let errortext = "Error: Password is too short. Length: " + passwordLen.length;
+      alert(errortext);
+      return;
+    }
 
     newUser = currentUser
+    if (passwordRef.current.value === "") {
+      newUser.password = currentUser.password;
+    } else {
+      newUser.password = password;
+    }
 
-    newUser.password = password;
     newUser.username = username;
 
     //Create a unique image name
     const date = new Date().getTime();
 
     let imageData = ppImage;
-    let imgUploadResponse; 
+    let imgUploadResponse;
     let ppImgLink = "";
 
     let imageUpload = await axios.post('http://localhost:5000/upload', { image: imageData, username: username, date: date })
-          .then(response => {
-            console.log(response.data); 
-            imgUploadResponse = response;  
-            ppImgLink = username + "-" + date + '-ProfilePic.png'
-            // ppImgLink = response.data.link
-            newUser.profileUrl = ppImgLink;
-          }).catch(error => console.error('Error uploading the image:', error));
+      .then(response => {
+        console.log(response.data);
+        imgUploadResponse = response;
+        ppImgLink = 'http://localhost:5000/uploads/pp/' + username + "-" + date + '-ProfilePic.png'
+        // ppImgLink = response.data.link
+        newUser.profileUrl = ppImgLink;
+      }).catch(error => console.error('Error uploading the image:', error));
 
-    
+
 
     const response = await axios.put(`http://localhost:4000/users/${currentUser.id}`, newUser);
 
     console.log("Account Update results: ", response)
-    
+    let accountUpdated = "Your account has been updated!";
+    alert(accountUpdated);
     localStorage.setItem("currentUser", JSON.stringify(newUser))
+    navigate("/login")
 
   }
 
-  
+  function openCoinModal() {
+    setisOpenCoinModal(true)
+  }
+
+  // useEffect(() => {
+  //   handleSearch4Models()
+  // }, [])
+
+  // async function handleSearch4Models() {
+
+
+
+  //   let response = await axios.get(`http://localhost:4000/models`);
+  //   let models = response.data;
+  //   console.log("List of Models: ", models)
+  //   setSearchedModels(models)
+  //   localStorage.setItem("Models", JSON.stringify(models))
+
+    
+
+  // }
+
   return (
     <>
       <TopNavBar />
-      
+
       <div style={{ padding: 10, backgroundColor: "#a7bcff" }}>
         <div
           style={{
@@ -184,15 +242,95 @@ const AccountSettings = () => {
           <h1>Account</h1>
           <br />
           <div>
+
+
             <div>
-              <b>Coins: </b> <span style={{margin: 5}}> 5 </span>
-              <button> Get More</button>
-            </div>
-            
-            <div>
-              <h4 style={{paddingBottom: 5}}>Subscriptions:</h4> 
-              <div style={{width:"90%", height:100, margin:"auto", overflowY: "scroll", backgroundColor: "lightgray", borderRadius: 5}}></div>
+              <div style={{ margin: 5 }}>
+                <div style={{ width: "90%", height: 32, margin: "auto", overflowY: "scroll", backgroundColor: "lightgray", borderRadius: 5, }}>
+
+                  <div style={{ margin: 5 }}>
+                    <b>Coins: </b> <span useRef="coinsRef" style={{ margin: 5, }}> {currentUser.coins} </span>
+                    <button onClick={openCoinModal}> Get More</button>
+                  </div>
+
+                </div>
+              </div>
               
+              <div style={{ margin: 5, marginBottom: 10 }}>
+                <div style={{ width: "90%", height: 150, margin: "auto", backgroundColor: "lightgray", borderRadius: 5 }}>
+                  <h4 style={{ padding: 5, margin: "auto" }}>Subcriptions: <input useRef="subscriptionsInputRef"></input></h4>
+
+                  <div style={{height: 120, width: "100%", margin: "auto", backgroundColor: "gray", borderRadius: "5", overflowX: "scroll", display: "flex", flexWrap: "wrap"}}>
+                    {!(searchedModels === null) && searchedModels.map((model) => {
+                      let input = ""
+                      if(subscribeInputRef.current) {
+                        input = subscribeInputRef.current.value;
+                      }
+                      if(currentUser.subscriptions.toLowerCase().includes(model.name.toLowerCase())){
+                        console.log("model: ", model)
+                        let mn = model.name.toLowerCase()
+                        if (mn.includes(input.toLowerCase()) || input === "") {
+                          return (
+                            // <span>
+                              <span style={{ display: "flex", gap: 2, margin: "auto", borderRadius: 5 }}>
+                                <div style={{ padding: 5, margin: 5, display: "flex", flexDirection: "column", gap: 5, backgroundColor: "#eeeeff", borderRadius: 5 }}>
+                                  <img src={model.modelProfileImg}  onClick={() => { navigate("/model?model=" + model.name) }} alt="" style={{ width: 64 }} />
+                                  <b style={{ margin: "auto" }}>{model.name}</b>
+                                  <div style={{ margin: "auto", gap: 2 }}>
+                                    {/* <button onClick={() => { followModel(model.name) }}>Follow</button> */}
+                                    {/* <button onClick={() => { navigate("/model?model=" + model.name) }}>Profile</button> */}
+                                    {/* <button onClick={() => { navigate("/chat?model=" + model.name) }}>Chat</button> */}
+                                  </div>
+                                </div>
+                              </span>
+                            // </span>
+                          )
+                        }
+                      }
+ 
+                    })}
+                  </div>
+
+                </div>
+              </div>
+              
+              <div style={{ margin: 5 }}>
+                <div style={{ width: "90%", height: 150, margin: "auto", backgroundColor: "lightgray", borderRadius: 5 }}>
+                  <h4 style={{ padding: 5, margin: "auto" }}>Following: <input useRef="followInputRef"></input></h4>
+
+                  <div style={{height: 120, width: "100%", margin: "auto", backgroundColor: "gray", borderRadius: "5", overflowX: "scroll", display: "flex", flexWrap: "wrap"}}>
+                    {!(searchedModels === null) && searchedModels.map((model) => {
+                      let input = ""
+                      if(followInputRef.current) {
+                        input = followInputRef.current.value;
+                      }
+                      console.log("model: ", model)
+                      let mn = model.name.toLowerCase()
+                      if (mn.includes(input.toLowerCase()) || input === "") {
+                        return (
+                          // <span>
+                            <span style={{ display: "flex", gap: 2, margin: "auto", borderRadius: 5 }}>
+                              <div style={{ padding: 5, margin: 5, display: "flex", flexDirection: "column", gap: 5, backgroundColor: "#eeeeff", borderRadius: 5 }}>
+                                <img src={model.modelProfileImg}  onClick={() => { navigate("/model?model=" + model.name) }} alt="" style={{ width: 64 }} />
+                                <b style={{ margin: "auto" }}>{model.name}</b>
+                                <div style={{ margin: "auto", gap: 2 }}>
+                                  {/* <button onClick={() => { followModel(model.name) }}>Follow</button> */}
+                                  {/* <button onClick={() => { navigate("/model?model=" + model.name) }}>Profile</button> */}
+                                  {/* <button onClick={() => { navigate("/chat?model=" + model.name) }}>Chat</button> */}
+                                </div>
+                              </div>
+                            </span>
+                          // </span>
+                        )
+                      }
+ 
+                    })}
+                  </div>
+
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>
@@ -213,7 +351,7 @@ const AccountSettings = () => {
             <br />
             <form onSubmit={handleSubmit}>
               <table style={{ margin: "auto" }}>
-                            
+
                 {/* <br /> */}
                 <tr>
                   <td>
@@ -258,13 +396,13 @@ const AccountSettings = () => {
                     />
                   </td>
                 </tr>
-               
+
                 <tr>
-                  <ImageCanvas setPPImage={setPPImage}/>
+                  <ImageCanvas setPPImage={setPPImage} />
                 </tr>
-               
+
                 <br />
-                
+
                 <tr>
                   <td></td>
                   <td>
@@ -272,7 +410,7 @@ const AccountSettings = () => {
                       style={{ padding: 5, float: "right", marginLeft: "auto" }}
                       type="submit"
                       disabled={uploading}
-                      // onClick={handleUpdateAccount}
+                      onClick={handleUpdateAccount}
                     >
                       Update Account
                     </button>
@@ -283,6 +421,8 @@ const AccountSettings = () => {
           </div>
         </div>
       </div>
+
+      {isOpenCoinModal && <GetMoreCoinsModal setIsOpen={setisOpenCoinModal} currentUser={currentUser} />}
     </>
   );
 };

@@ -88,7 +88,7 @@ const TopNavBar = () => {
       </span>
       <button style={{ margin: 5, display: "flex" }} onClick={() => logoutUser()}>
         <span style={{margin: "auto"}}>Logout</span>
-        <HiOutlineLogout style={{ fontSize: 24, margin: "auto" }}/>
+        {/* <HiOutlineLogout style={{ fontSize: 24, margin: "auto" }}/> */}
       </button>
     </div>
     {/* </div> */}

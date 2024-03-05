@@ -36,10 +36,15 @@ const Home = () => {
   const [allPosts, setAllPosts] = useState(null);
   const [searchForMode, setSearchForMode] = useState("posts")
   const searchFor = useRef(null)
-  const searchInput = useRef(null)
+  const searchInputRef = useRef(null)
   let sf = "posts";
-  
+  const [searchedPosts, setSearchedPosts] = useState(null)
   const [searchedModels, setSearchedModels] = useState(null)
+  const [searchedFollowings, setSearchedFollowings] = useState(null)
+  const [searchedSubscriptions, setSearchedSubscriptions] = useState(null)
+
+  const [noResults, setNoResults] = useState(false)
+  // let noResults = false;
 
   const getAllPosts = async (threadTitle) => {
     fetch("http://localhost:4000/posts", {
@@ -66,13 +71,49 @@ const Home = () => {
   };
 
   async function handleSearch4Models (){
-    const input = searchInput.current.value;
+    const input = searchInputRef.current.value;
     console.log("Search For: ", input)
-    const response = await axios.get(`http://localhost:4000/models`);
-    const chats = response.data;
+    let response = await axios.get(`http://localhost:4000/models`);
+    let models = response.data;
+    let searchResults = [];
+    let response2 = await axios.get(`http://localhost:4000/posts`);
+    let posts = response2.data;
 
-    console.log("List of Matching Models: ", chats)
-    setSearchedModels(chats)
+    // if(searchForMode === "models"){
+    //   for (let index = 0; index < models.length; index++) {
+    //     const element = models[index];
+    //     if (element.name.includes(input) === true){
+    //       searchResults[searchResults.length] = element
+    //     }
+    //   }
+    // }
+
+    console.log("SRL: ", searchResults.length)
+
+    if(searchForMode === "posts") {
+      for (let index = 0; index < posts.length; index++) {
+        const element = posts[index];
+        console.log("MN: ", element.modelName.toLowerCase())
+        if (element.modelName.toLowerCase().includes(input.toLowerCase()) || element.caption.toLowerCase().includes(input.toLowerCase()) || element.title.toLowerCase().includes(input.toLowerCase())){
+          searchResults[searchResults.length] = element
+        }
+      }
+    }
+    
+    console.log("List of Models: ", models)
+    setSearchedModels(models) 
+
+    console.log("List of Matching Posts: ", searchResults)
+    if (searchResults.length !== 0){
+      setSearchedPosts(searchResults)
+      setNoResults(false);
+    }
+    else{
+      setSearchedPosts(null)
+      setNoResults(true);
+    }
+      
+
   }
 
   useEffect(() => {
@@ -104,20 +145,51 @@ const Home = () => {
   }
 
   async function getCurrentUserData() {
-    try{
+    try {
       const response = await axios.get(`http://localhost:4000/users?id=${currentUser.id}`);
       const data = response.data[0];
       console.log("Current User Data: ", data)
       setCurrentUser(data)
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    } catch (error){
+    } catch (error) {
       navigate("/login")
     }
   }
 
+  async function getModelsData(){
+    let response = await axios.get(`http://localhost:4000/models`);
+    let models = response.data;
+    console.log("List of Models: ", models)
+    // setSearchedModels(models)
+    localStorage.setItem("Models", JSON.stringify(models))
+
+    let i = 0;
+    let subscriptions = []
+    models.map((model) => {
+      if(currentUser.subscriptions.includes(model.name)){
+        subscriptions[i] = model;
+        i++
+      } 
+    }) 
+
+    i = 0;
+    let following = []
+    models.map((model) => {
+      if(currentUser.following.includes(model.name)){
+        following[i] = model;
+        i++
+      } 
+    })
+
+    localStorage.setItem("Subscriptions", JSON.stringify(subscriptions))
+    setSearchedSubscriptions(JSON.parse(localStorage.getItem("Subscriptions")))
+    localStorage.setItem("Following", JSON.stringify(following))
+    setSearchedFollowings(JSON.parse(localStorage.getItem("Following")))
+  }
+
   useEffect(() => {
     getCurrentUserData();
-    
+    getModelsData();
   }, [])
   
 
@@ -144,7 +216,7 @@ const Home = () => {
         <div style={{display:"flex", gap: 5, padding: 10, margin: "2% 5%", backgroundColor: "#a7ccff", borderRadius: 10, border: "3px solid black" }}>
           <FaSearch style={{fontSize: 32, marginRight: 5}}/>
           
-          <input ref={searchInput} type="text" onKeyDown={(e) => { if (e.key === "Enter") handleSearch4Models(); }} onKeyUp={()=>{console.log("keyUP")}} style={{ width: "70%", height: 32, marginRight: 10}}/>
+          <input ref={searchInputRef} type="text" onKeyDown={(e) => { if (e.key === "Enter") handleSearch4Models(); }} onKeyUp={()=>{console.log("keyUP")}} style={{ width: "70%", height: 32, marginRight: 10}}/>
           <span for="cars" style={{width:"10%", margin: "auto"}}>Look for:</span>
           <select id="searchFor" name="cars" style={{width:"15%"}} ref={searchFor} onClick={()=>setTheSearchMode()}>
             <option value="posts">Posts</option>
@@ -156,25 +228,80 @@ const Home = () => {
 
         {searchForMode === "posts" &&
           <div style={{ overflowY: "scroll", scrollbarWidth: "none", height: 600 }}>
-            {console.log("hello: " + JSON.stringify(allPosts))}
-            {!(allPosts === null) && allPosts.map((post) => {
+            {
+              console.log("No Results: ", noResults)
+            }
+
+            {!(allPosts === null) && (noResults === false) &&(searchedPosts === null)  && allPosts.map((post) => {
+              // console.log("Search Result: ", searchedPosts)
+              
+              return (
+                <Post data={post} showButtons={true} />
+              )
+
+            })}
+            
+            {!(searchedPosts === null) && searchedPosts.map((post) => {
 
               return (
                 <Post data={post} showButtons={true} />
               )
 
             })}
+
+            {(noResults === true) && 
+
+              <div style={{width: "90%", margin: "auto", padding: 20, backgroundColor: "#8F64F3"}}>
+                <div>
+                  <h1> Nothing Matching Your Search</h1>
+                  <p> Please try searching for something else.</p>
+                  Type 3 letters to start a search
+                </div>
+                
+              </div>
+            }
+
           </div>
         }
-        {searchForMode === "models" &&
+
+        {searchForMode === "followings" &&
           <div style={{ overflowY: "scroll", scrollbarWidth: "none", height: 600 }}>
-            <div style={{ height: 50, width: "90%", margin: "auto", padding: 20 }}>
+           
+            {!(allPosts === null) && allPosts.map((post) => {
+              let str = currentUser.following.toLowerCase()
+              if(str.includes(post.modelName.toLowerCase())){
+                let input = searchInputRef.current.value;
+                if(post.modelName.includes(searchInputRef.current.value)){
+                  console.log("returned: ", post)
+                  // setNoResults(true)
+                  return (
+                    <Post data={post} showButtons={true} />
+                  )
+                }
+                let modelname = post.modelName.toLowerCase()
+                if(modelname.includes(input.toLowerCase())){
+                  console.log("returned: ", post)
+                  // setNoResults(true)
+                  return (
+                    <Post data={post} showButtons={true} />
+                  )
+                }
+              }
+            })}
+            
+          </div>
+        }
+
+        {searchForMode === "models" &&
+          <div style={{ overflowY: "scroll", scrollbarWidth: "none", margin: "auto", height: 600, backgroundColor: "rgb(167, 188, 220)" }}>
+            {/* <div style={{ height: 50, width: "90%", margin: "auto", padding: 20 }}>
               Type 3 letters to start a search
-            </div>
+            </div> */}
             {/* {console.log("hello: " + JSON.stringify(allPosts))} */}
             {!(searchedModels === null) && searchedModels.map((model) => {
-
-              return (
+              const input = searchInputRef.current.value;
+              if(model.name.toLowerCase().includes(input.toLowerCase())){
+                return (
                 <div>
                   <div style={{ display: "flex", flexDirection: "row", gap: 10, margin: "auto", borderRadius: 10 }}>
                     <div style={{ padding: 10, margin: 10, display: "flex", flexDirection: "column", gap: 10, backgroundColor: "#eeeeff", borderRadius: 10 }}>
@@ -188,8 +315,8 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-
-              )
+                )
+              }
 
             })}
           </div>

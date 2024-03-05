@@ -45,7 +45,15 @@
     border-radius: 16px;
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
   }
-  
+   .buyCoinsModal {
+    width: 350px;
+    height: 350px;
+    background: white;
+    color: white;
+    z-index: 10;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
+  }
   .unlockModal {
     width: 350px;
     height: 210px;
@@ -151,6 +159,20 @@
     transition: all 0.25s ease;
   }
 
+  .coinBtn {
+    margin: auto;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    border: 3px;
+    color: #181818;
+    background: #f88221;
+    transition: all 0.25s ease;
+    width: 100%;
+  }
+
   .addComment {
     margin-top: auto;
     cursor: pointer;
@@ -166,10 +188,16 @@
   
   .deleteBtn:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
-    transform: translateY(-5px);
+    transform: translateY(-5px), ;
     background: #ff3e4e;
   }
-  
+
+  .coinBtn:hover {
+    box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
+    transform: scale(1.25), ;
+    background: #f8d300f5;
+  }
+
   .cancelBtn {
     margin-top: 10px;
     cursor: pointer;

@@ -113,10 +113,16 @@ const Post = ({data, showButtons}) => {
     
     async function getTips() {
         try{
-        const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+        // const response = await axios.get(`http://localhost:4000/comments?postId=${postData.id}`);
+        const response = await axios.get(`http://localhost:4000/tips?postId=${postData.id}`);
         const data = response.data;
-        console.log("Post Comments Data: ", data)
+        console.log("Post Tip Data: ", data)
         setPostTips(data)
+        //  setTips(postData.tips.split(";").length);
+        // tipsRef.current.innerHTML = postData.tips.split(";").length;
+        // setTips(data);
+        console.log("tips: ", postTips)
+        tipsRef.current.innerHTML = data.length;
         // localStorage.setItem("currentUser", JSON.stringify(currentUser));
         } catch (error){
             // navigate("/login")
@@ -175,6 +181,7 @@ const Post = ({data, showButtons}) => {
 
     function tipAction() {
         setIsOpenTip(true)
+        getTips()
         console.log("tip")
     }
 
@@ -247,8 +254,7 @@ const Post = ({data, showButtons}) => {
             setCaption(postData.caption) 
             captionRef.current.innerHTML = postData.caption;
 
-            setTips(postData.tips.split(";").length);
-            tipsRef.current.innerHTML = postData.tips.split(";").length;
+           getTips();
             // console.log(JSON.stringify(postData));
             console.log("PostData ID: ", postData.id);
 
@@ -263,7 +269,7 @@ const Post = ({data, showButtons}) => {
 
     return (
         <>
-            {isOpenTip && <TipModal setIsOpen={setIsOpenTip} tips={postData.tips} modelName={postData.modelName} />}
+            {isOpenTip && <TipModal setIsOpen={setIsOpenTip} tips={postTips} modelName={postData.modelName} />}
 
             {isOpenComment && <CommentsModal setIsOpen={setIsOpenComment} postComments={postComments} modelName={postData.modelName} postData={postData}/>}
 

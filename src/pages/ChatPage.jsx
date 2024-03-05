@@ -1,9 +1,11 @@
 // import React from "react";
 import React, { useContext, useState, useEffect, useRef, useLayoutEffect} from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 import axios from "axios";
 
 import TopNavBar from "../components/TopNavBar";
+import GetMoreCoinsModal from "../components/GetMoreCoinsModal";
 
 import Cam from "../img/cam.png";
 import Add from "../img/add.png";
@@ -25,6 +27,8 @@ import { v4 as uuid } from "uuid";
 const ChatPage = () => {
   // const { data } = useContext(ChatContext);
 
+  const navigate = useNavigate();
+
   const queryParameters = new URLSearchParams(window.location.search)
   
   let modelName = queryParameters.get("model")
@@ -33,6 +37,7 @@ const ChatPage = () => {
   const [coins, setCoins] = useState(0);
   const [viewChat, setViewChat] = useState(false);
   const [allChats, setAllChats] = useState(null);
+  const [openCoinModal, setOpenCoinModal] = useState(false);
   
   const chatSearch = useRef(null);
   const chatsList = useRef(null);
@@ -98,14 +103,23 @@ const ChatPage = () => {
     // const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}`);
     const response = await axios.get(`http://localhost:4000/chats?modelName=${queryParameters.get("model")}&userid=${currentUser.id}`);
     let chat = response.data[0];
+    console.log("Retrieved Chat: ", response)
     // console.log("Retrieved Chat: ", chat)
-    if (chat.messages === ""){
-      //If no messages exist yet
+    try {
+      if (chat.messages){
+        //If no messages exist yet
+        console.log(`Getting Chat with ${modelName}: `, chat)
+        setCurrentChat(chat)
+      } else {
+        setCurrentChat(newChatTemplate)
+        console.log(`Creating New A Chat with ${modelName}: `, newChatTemplate);
+      }
+    } catch (error) {
+      setCurrentChat(newChatTemplate)
       console.log(`Creating New A Chat with ${modelName}: `, newChatTemplate);
-    } else {
-      console.log(`Getting Chat with ${modelName}: `, chat)
     }
-    setCurrentChat(chat)
+    
+    
     setChatMode("one") 
   }
 
@@ -136,6 +150,7 @@ const ChatPage = () => {
 
   //Updated chat page when new chat is sent
   useEffect(() => {
+    setCoins(currentUser.coins) 
     if (newChat !== null) {
       setCurrentChat(newChat)
       sendChat() 
@@ -215,7 +230,15 @@ const ChatPage = () => {
     chatsList.current.style.display = "block";
   }
 
+  function goToChat(){
+    console.log("click Image")
+    navigate("/login")
+  }
 
+  function openBuyCoinModal(){
+    setCoins(1 + coins)
+    setOpenCoinModal(true)
+  }
 
   // Render HTML Code
   return (
@@ -236,19 +259,20 @@ const ChatPage = () => {
           <div className="navbar" ref={chatSearch} id="navbar">
             <div className="user" style={{ display: "flex", backgroundColor: "#8e82d2", padding: 10 }}>
               <span style={{margin: 3}}> Coins: {coins}</span>
-              <button onClick={() => setCoins(1 + coins)}>+ Get More</button>
-              <button
+              <button style={{ float: "right", marginLeft: "auto" }} onClick={() => openBuyCoinModal()}>+ Get More</button>
+              
+              {/* <button
                 style={{ float: "right", marginLeft: "auto" }}
                 onClick={()=>{openChats()}}
               >
                 {" "}{">>>"}{" "}
-              </button>
+              </button> */}
             </div>
           </div>
 
 
           {/* <Search /> */}
-         { chatMode === "all" &&
+         {/* { chatMode === "all" &&
           <div className="search">
               <div className="searchForm" style={{padding: 3, display: "flex", backgroundColor: "#8e82bd"}}>
                 <FaSearch style={{margin: "auto", fontSize: 24, color: "white"}}/>
@@ -260,18 +284,21 @@ const ChatPage = () => {
               {err && <span>User not found!</span>}
               {user && (
                 <div className="userChat" onClick={()=> searchHandleSelect()}>
-                  <img src={user.photoURL} alt="" />
+                  <div onClick={()=> goToChat()}>
+                    <img src={user.photoURL} alt="" />
+                  </div>
+                  
                   <div className="userChatInfo">
                     <span>{user.displayName}</span>
                   </div>
                 </div>
               )}
             </div>
-          }
+          } */}
 
 
           {/* <ChatsList /> */}
-          <div className="chats" style={{backgroundColor: "#8e82ad"}} ref={chatsList}>
+          {/* <div className="chats" style={{backgroundColor: "#8e82ad"}} ref={chatsList}>
             {allChats !== null && allChats.map((chat) => {
                 return(
                   <div key={chat.id} className="userChat" onClick={() => handleSelect(chat.modelName)} style={{display: 'flex', padding: 3}}>
@@ -284,14 +311,19 @@ const ChatPage = () => {
                 )
               }
             )}        
-          </div>
+          </div> */}
 
 
           {/* Chat with model */}
           { currentChat !== null &&
             <div className="chat" style={{height: 512}} ref={chatPane}>
               <div className="chatInfo">
-                <img src={currentChat.modelProfileImg} alt="" style={{width: 60, height: 60, borderRadius: 80, marginRight: 15}} />
+                <div onClick={()=> goToChat()}>
+                    {/* <img src={user.photoURL} alt="" />  */}
+                    <img src={currentChat.modelProfileImg} alt="" style={{width: 60, height: 60, borderRadius: 80, marginRight: 15}} />
+                </div>
+                  
+               
                 <h3 style={{marginRight: "auto" }}>{currentChat.modelName}</h3>
                 {
                   chatMode === "all" &&
@@ -324,6 +356,7 @@ const ChatPage = () => {
           Ad
         </div>
       </div>
+      {openCoinModal && <GetMoreCoinsModal setIsOpen={setOpenCoinModal} currentUser={currentUser} />}
     </>
   );
 };

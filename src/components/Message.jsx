@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
 
 const Message = ({ message, data }) => {
   // const { currentUser } = useContext(AuthContext);
@@ -41,12 +39,12 @@ const Message = ({ message, data }) => {
   return (
     <div
       ref={ref}
-      className={`message ${message.from === currentUser.username && "owner"}`}
+      className={`message ${message.from !== "Model" && "owner"}`}
     >
       <div className="messageInfo">
         <img
           src={
-            message.from === currentUser.username
+            message.from !== "Model"
               ? currentUser.profileUrl
               : data.modelProfileImg
           }

@@ -4,11 +4,11 @@
       "id": 1,
       "postId": "76nb5678mn67mn76",
       "modelName": "Sally",
-      "modelProfileImg": "https://media.gettyimages.com/id/1317804578/photo/one-businesswoman-headshot-smiling-at-the-camera.jpg?s=612x612&w=gi&k=20&c=tFkDOWmEyqXQmUHNxkuR5TsmRVLi5VZXYm3mVsjee0E=",
+      "modelProfileImg": "http://localhost:5000/images/modelPP/Sally.jpg",
       "mediaUrl": "http://localhost:5000/images/dfpic3.jpg",
       "caption": "ABC text",
       "title": "Bliss",
-      "likes": "Maxwell, T-Rell, Jay, bootybob, null",
+      "likes": "Maxwell, T-Rell, Jay, bootybob, null, null",
       "comments": "Maxwell: Wow that is awesome!, 3; T-rell: Cool my man!, 3; Jay: W post bro!, 3; billybob: , 0; billybob: , 0; billybob: sgsdgsdgsdgfdsg, 0;",
       "tips": "Maxwell:8; Logan:3; Micheal:6; Paul:12; Jonas:1; Rick:4;",
       "cost": 5
@@ -17,7 +17,7 @@
       "id": 2,
       "postId": "543b6546354vc63",
       "modelName": "Sally",
-      "modelProfileImg": "`http://localhost:5000/images/modelPP/Sally.jpg`",
+      "modelProfileImg": "http://localhost:5000/images/modelPP/Sally.jpg",
       "mediaUrl": "https://www.elmueble.com/medio/2023/03/09/perro-de-raza-rottweiler_9f7a22a7_230309180127_900x900.jpg",
       "caption": "ABC text default description",
       "title": "Candy",
@@ -151,6 +151,13 @@
       "text": "hey",
       "likes": 0,
       "postId": 4
+    },
+    {
+      "id": "1a5733f1-6814-444d-b461-853d0647860f",
+      "username": "user1",
+      "text": "ne",
+      "likes": -1,
+      "postId": 1
     }
   ],
   "tips": [
@@ -195,6 +202,76 @@
       "tipUserId": "2a32d32a-859c-4a75-8783-5aee2bc70d8d",
       "tipUsername": "aaa",
       "tipAmount": 5
+    },
+    {
+      "id": 5,
+      "postId": 4,
+      "tipUserId": "49e1f904-9051-4dce-93e3-eb737d701ec7",
+      "tipUsername": "test",
+      "tipAmount": 3
+    },
+    {
+      "id": 8,
+      "postId": 4,
+      "tipUserId": "49e1f904-9051-4dce-93e3-eb737d701ec7",
+      "tipUsername": "test",
+      "tipAmount": 3
+    },
+    {
+      "postId": 1,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "4",
+      "id": 9
+    },
+    {
+      "postId": 3,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "3f",
+      "id": 10
+    },
+    {
+      "postId": 3,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "1f",
+      "id": 11
+    },
+    {
+      "postId": 3,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "2",
+      "id": 12
+    },
+    {
+      "postId": 4,
+      "tipUserId": "49e1f904-9051-4dce-93e3-eb737d701ec7",
+      "tipUsername": "test",
+      "tipAmount": 13,
+      "id": 13
+    },
+    {
+      "postId": 4,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "5",
+      "id": 14
+    },
+    {
+      "postId": 4,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": "1",
+      "id": 15
+    },
+    {
+      "postId": 1,
+      "tipUserId": "83f12e41-9260-477c-9727-ddb11fca70f9",
+      "tipUsername": "user1",
+      "tipAmount": 1,
+      "id": 16
     }
   ],
   "models": [
@@ -207,7 +284,8 @@
       },
       "followers": {},
       "subscribers": {},
-      "bio": "A default stock image person"
+      "bio": "A default stock image person",
+      "id": "1234"
     },
     {
       "name": "Pammy",
@@ -218,7 +296,19 @@
       },
       "followers": {},
       "subscribers": {},
-      "bio": "A default stock image person"
+      "bio": "A default stock image person",
+      "id": "123"
+    },
+    {
+      "name": "James",
+      "modelProfileImg": "http://localhost:5000/images/modelPP/James.jpg",
+      "post": {
+        "0": "3"
+      },
+      "followers": {},
+      "subscribers": {},
+      "bio": "A Cool stock image dude",
+      "id": "121"
     }
   ],
   "users": [
@@ -287,15 +377,16 @@
     },
     {
       "id": "83f12e41-9260-477c-9727-ddb11fca70f9",
-      "username": "",
-      "password": "Pass",
+      "username": "user1",
+      "password": "Password",
       "email": "testuser@gmail.com",
       "date": "",
       "joinDate": 1705208741566,
-      "coins": -8,
+      "coins": 7,
       "unlockedPosts": "0, 2, 3, 1",
       "following": "Sally,Pammy",
-      "subscriptions": ""
+      "subscriptions": "",
+      "profileUrl": "http://localhost:5000/uploads/pp/TestUser-1708252763021-ProfilePic.png"
     },
     {
       "id": "79225859-cf69-422e-bff5-022ddee9f237",
@@ -321,14 +412,14 @@
         {
           "msgId": "12320",
           "from": "testuser",
-          "to": "Pammy",
+          "to": "Model",
           "datetime": "2024-02-02T23:56:21.553Z",
           "messageText": "Hello Mam.",
           "reaction": "like"
         },
         {
           "msgId": "12321",
-          "from": "Pammy",
+          "from": "Model",
           "to": "testuser",
           "datetime": "2024-02-02T23:57:21.553Z",
           "messageText": "hi man.",
@@ -337,14 +428,14 @@
         {
           "msgId": "12322",
           "from": "testuser",
-          "to": "Pammy",
+          "to": "Model",
           "datetime": "2024-02-02T23:58:21.553Z",
           "messageText": "Dont forget to have a good day.",
           "reaction": "like"
         },
         {
           "msgId": "12324",
-          "from": "Pammy",
+          "from": "Model",
           "to": "testuser",
           "datetime": "2024-02-02T23:59:21.553Z",
           "messageText": "Thank You, I will make sure of it.",
@@ -361,14 +452,14 @@
         {
           "msgId": "12320",
           "from": "testuser",
-          "to": "Sally",
+          "to": "Model",
           "datetime": "2024-02-02T23:59:02.553Z",
           "messageText": "Hello Mam.",
           "reaction": "like"
         },
         {
           "msgId": "12321",
-          "from": "Sally",
+          "from": "Model",
           "to": "testuser",
           "datetime": "2024-02-02T23:59:21.553Z",
           "messageText": "hi man.",
@@ -377,14 +468,14 @@
         {
           "msgId": "12322",
           "from": "testuser",
-          "to": "Sally",
+          "to": "Model",
           "datetime": "2024-02-03T12:00:10.553Z",
           "messageText": "Dont forget to have a good day.",
           "reaction": "like"
         },
         {
           "msgId": "12324",
-          "from": "Sally",
+          "from": "Model",
           "to": "testuser",
           "datetime": "2024-02-03T12:00:21.553Z",
           "messageText": "Thank You, I will make sure of it.",
@@ -426,165 +517,25 @@
           "from": "testuser"
         },
         {
-          "datetime": "2024-02-04T12:01:21.553Z",
-          "messageText": "xxx2",
-          "msgId": "c142bdac-7682-4304-821d-c9d2f840fc63",
+          "datetime": "2024-02-24T16:06:27.152Z",
+          "messageText": "fghfgh",
+          "msgId": "8abdcdf9-fefc-4817-a8d0-d7bc0c496819",
           "reaction": "",
-          "from": "testuser"
+          "from": "user1"
         },
         {
-          "datetime": "2024-02-04T15:02:56.558Z",
-          "messageText": "fdgfdg",
-          "msgId": "3618b764-10d4-4d3a-807a-18ab1a514db8",
+          "datetime": "2024-02-24T16:25:55.220Z",
+          "messageText": "http://localhost:3000/chat?model=Sally",
+          "msgId": "2fd1ab03-c3a3-40cc-811d-62f17d996655",
           "reaction": "",
-          "from": "testuser"
+          "from": "user1"
         },
         {
-          "datetime": "2024-02-04T15:05:19.458Z",
+          "datetime": "2024-03-03T05:09:35.585Z",
           "messageText": "fdgdfg",
-          "msgId": "dc90ed3c-f759-4599-b6df-09cecd423817",
+          "msgId": "6b49163d-2a3a-4232-b7ea-744f1a2bc1a9",
           "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:05:32.336Z",
-          "messageText": "fdgdfgvvvvvvv",
-          "msgId": "b3a56332-fbc8-4638-b8dc-da0f293b4119",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:08:59.323Z",
-          "messageText": "fdgdfgvvvvvvvdfgdfg",
-          "msgId": "836a6c20-cb96-4373-a8a0-f9d711d903bc",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:09:28.389Z",
-          "messageText": "hey buyy",
-          "msgId": "ab6013d8-5bc2-4b5f-9b16-8732175bb75e",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:10:04.483Z",
-          "messageText": "hey buyyf",
-          "msgId": "607f9189-5535-454a-9181-318a653eb4fb",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:10:58.878Z",
-          "messageText": "hey buyyfdd",
-          "msgId": "ae05c149-cae6-47ce-863f-d53172cdf36a",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:19:07.477Z",
-          "messageText": "hey buyyfddg",
-          "msgId": "3f19d8c6-ccab-40a3-91f3-5dc6039ad7a4",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:19:36.969Z",
-          "messageText": "hey buyyfddg one",
-          "msgId": "80564185-d2c2-40aa-95df-f10b634cfe50",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:21:40.646Z",
-          "messageText": "ghfghf",
-          "msgId": "cb2fc418-661e-43cb-b6a8-d20eecbb657c",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:27:22.557Z",
-          "messageText": "1",
-          "msgId": "034abda9-f7b1-44ce-baf8-45225488340f",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:28:40.940Z",
-          "messageText": "112334254235",
-          "msgId": "b62504ae-010a-42fc-8353-72289df669f4",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:28:42.854Z",
-          "messageText": "456456456456",
-          "msgId": "46428ced-6948-496a-a052-029ab6f9da32",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:28:43.876Z",
-          "messageText": "456456456456",
-          "msgId": "21fa73ec-7acc-4cdd-8539-d3d310b980f2",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:29:44.454Z",
-          "messageText": "rrrreerrrr54546rtrtyrtyrtyyhriyui",
-          "msgId": "6fcac9fe-cc09-436b-acce-93b6ff1e3e0b",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:30:46.500Z",
-          "messageText": "hhjkhk",
-          "msgId": "c9ed12df-b00f-48a6-9ce9-d55bd0d0bcea",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:32:05.614Z",
-          "messageText": "retert",
-          "msgId": "bd855b4e-040a-4fe2-a7e5-8e05a208dc57",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:34:26.870Z",
-          "messageText": "ergreg",
-          "msgId": "8b0cea9e-3633-40be-ba2f-15eb513a18eb",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:34:32.009Z",
-          "messageText": "ytjtyjtyjtyj",
-          "msgId": "9de1cbbb-2421-4084-9211-69703d388dbb",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:34:34.893Z",
-          "messageText": "tyjtyj",
-          "msgId": "2493b556-951d-4586-bf94-428f2cf002e8",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:34:37.861Z",
-          "messageText": "tyjtyjj",
-          "msgId": "fab618a9-7805-496f-9776-936439db94ac",
-          "reaction": "",
-          "from": "testuser"
-        },
-        {
-          "datetime": "2024-02-04T15:35:15.138Z",
-          "messageText": "hgjghjghj",
-          "msgId": "5cb3876f-1b08-420d-ab52-3e6e15118977",
-          "reaction": "",
-          "from": "testuser"
+          "from": "user1"
         }
       ]
     },
@@ -633,5 +584,6 @@
         }
       ]
     }
+    
   ]
 }
